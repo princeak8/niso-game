@@ -1,0 +1,21 @@
+{
+  "name": "niso-grid-balancing-game",
+  "version": "1.0.0",
+  "description": "NISO Keep the Lights On Grid Balancing Game",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vue-tsc": "^2.2.8"
+  }
+}
