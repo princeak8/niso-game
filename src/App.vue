@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import AppHeader from './components/layout/AppHeader.vue';
 import TeamPlayView from './components/team/TeamPlayView.vue';
 import FacilitatorDashboard from './components/facilitator/FacilitatorDashboard.vue';
@@ -7,23 +7,39 @@ import DebriefView from './components/debrief/DebriefView.vue';
 import SolutionKeyModal from './components/facilitator/SolutionKeyModal.vue';
 
 const activeTab = ref<'team' | 'facilitator' | 'debrief'>('team');
-const isProjectorMode = ref(false);
+const theme = ref<'light' | 'dark'>('light'); // White background by default
 const showSolutionKey = ref(false);
+
+function handleToggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light';
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('niso_theme_mode', theme.value);
+  }
+}
+
+onMounted(() => {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('niso_theme_mode');
+    if (saved === 'light' || saved === 'dark') {
+      theme.value = saved;
+    }
+  }
+});
 </script>
 
 <template>
   <div
-    class="min-h-screen text-slate-100 flex flex-col font-sans transition-colors duration-200"
+    class="min-h-screen flex flex-col font-sans transition-colors duration-200"
     :class="[
-      isProjectorMode ? 'bg-black text-white' : 'bg-[#06121E]'
+      theme === 'light' ? 'theme-light bg-white text-slate-900' : 'theme-dark bg-[#0B1726] text-white'
     ]"
   >
     <!-- Application Header -->
     <AppHeader
       :active-tab="activeTab"
-      :is-projector-mode="isProjectorMode"
+      :theme="theme"
       @update:active-tab="tab => activeTab = tab"
-      @update:is-projector-mode="val => isProjectorMode = val"
+      @toggle-theme="handleToggleTheme"
       @open-solution-key="showSolutionKey = true"
     />
 
@@ -54,12 +70,12 @@ const showSolutionKey = ref(false);
     />
 
     <!-- Footer -->
-    <footer class="bg-[#071626] border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-400">
+    <footer class="bg-[#091B2E] border-t-2 border-[#1E3A5F] py-4 px-6 text-center text-xs text-slate-200">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-        <div class="font-medium">
+        <div class="font-bold">
           NISO Staff Acculturation Programme · Exercise Guide 3: Keep the Lights On
         </div>
-        <div class="font-mono text-[11px] text-teal-400">
+        <div class="font-mono text-xs font-bold text-[#4ADE80] bg-[#143D24] px-3 py-1 rounded-full border border-[#389E5F]/50">
           Target System Frequency: 50.00 Hz · 1 Token = 10 MW
         </div>
       </div>
@@ -81,13 +97,13 @@ html, body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #071626;
+  background: #091B2E;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0D626C;
+  background: #389E5F;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0A4D54;
+  background: #2B7A49;
 }
 </style>

@@ -107,72 +107,71 @@ const statusBadgeClass = computed(() => {
           <!-- Gauge Arc Background SVG -->
           <svg viewBox="0 0 200 110" class="w-full h-full">
             <!-- Critical Low Red Band (48.0 - 48.8) -->
-            <path d="M 20 100 A 80 80 0 0 1 45 45" fill="none" stroke="#EF4444" stroke-width="14" stroke-linecap="round" />
+            <path d="M 20 100 A 80 80 0 0 1 45 45" fill="none" stroke="#EF4444" stroke-width="15" stroke-linecap="round" />
             <!-- Alert Low Amber Band (48.8 - 49.5) -->
-            <path d="M 45 45 A 80 80 0 0 1 75 25" fill="none" stroke="#F59E0B" stroke-width="14" />
-            <!-- Normal Green Band (49.5 - 50.5) -->
-            <path d="M 75 25 A 80 80 0 0 1 125 25" fill="none" stroke="#10B981" stroke-width="16" />
+            <path d="M 45 45 A 80 80 0 0 1 75 25" fill="none" stroke="#F59E0B" stroke-width="15" />
+            <!-- Normal NISO Green Band (49.5 - 50.5) -->
+            <path d="M 75 25 A 80 80 0 0 1 125 25" fill="none" stroke="#389E5F" stroke-width="18" />
             <!-- Alert High Amber Band (50.5 - 51.2) -->
-            <path d="M 125 25 A 80 80 0 0 1 155 45" fill="none" stroke="#F59E0B" stroke-width="14" />
+            <path d="M 125 25 A 80 80 0 0 1 155 45" fill="none" stroke="#F59E0B" stroke-width="15" />
             <!-- Critical High Red Band (51.2 - 52.0) -->
-            <path d="M 155 45 A 80 80 0 0 1 180 100" fill="none" stroke="#EF4444" stroke-width="14" stroke-linecap="round" />
+            <path d="M 155 45 A 80 80 0 0 1 180 100" fill="none" stroke="#EF4444" stroke-width="15" stroke-linecap="round" />
 
             <!-- 50.0 Hz Center Marker Notch -->
-            <line x1="100" y1="12" x2="100" y2="28" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" />
+            <line x1="100" y1="10" x2="100" y2="28" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" />
             <!-- 49.5 Marker -->
-            <line x1="75" y1="20" x2="78" y2="30" stroke="#CBD5E1" stroke-width="1.5" />
+            <line x1="75" y1="18" x2="78" y2="30" stroke="#FFFFFF" stroke-width="2" />
             <!-- 50.5 Marker -->
-            <line x1="125" y1="20" x2="122" y2="30" stroke="#CBD5E1" stroke-width="1.5" />
+            <line x1="125" y1="18" x2="122" y2="30" stroke="#FFFFFF" stroke-width="2" />
 
             <!-- Needle Pivot Base -->
-            <circle cx="100" cy="100" r="8" fill="#F8FAFC" />
+            <circle cx="100" cy="100" r="9" fill="#FFFFFF" stroke="#091B2E" stroke-width="2" />
           </svg>
 
           <!-- Dynamic SVG Needle -->
           <div
-            class="absolute bottom-0 w-1 h-20 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-lg"
+            class="absolute bottom-0 w-1.5 h-20 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-lg shadow-rose-900/80"
             :style="{ transform: `rotate(${needleAngle}deg)` }"
           ></div>
         </div>
 
         <!-- Frequency Digital Readout -->
         <div class="mt-1 text-center">
-          <div class="text-3xl font-black font-mono tracking-tight" :class="{
-            'text-emerald-400': statusBand === 'normal',
-            'text-amber-400': statusBand === 'alert',
-            'text-rose-400': statusBand.startsWith('critical')
+          <div class="text-3xl md:text-4xl font-black font-mono tracking-tight" :class="{
+            'text-[#4ADE80]': statusBand === 'normal',
+            'text-[#FBBF24]': statusBand === 'alert',
+            'text-[#F87171]': statusBand.startsWith('critical')
           }">
-            {{ frequency.toFixed(2) }} <span class="text-sm font-sans text-slate-300">Hz</span>
+            {{ frequency.toFixed(2) }} <span class="text-base font-sans font-extrabold text-[#E2E8F0]">Hz</span>
           </div>
 
-          <div class="flex items-center justify-center gap-3 text-[11px] font-mono text-slate-400 mt-0.5">
-            <span>ROCOF: <b :class="rocof < 0 ? 'text-amber-400' : 'text-slate-200'">{{ (rocof >= 0 ? '+' : '') + rocof.toFixed(2) }}</b> Hz/s</span>
+          <div class="flex items-center justify-center gap-3 text-xs font-mono font-bold text-[#E2E8F0] mt-0.5">
+            <span>ROCOF: <b :class="rocof < 0 ? 'text-[#FCD34D]' : 'text-white'">{{ (rocof >= 0 ? '+' : '') + rocof.toFixed(2) }}</b> Hz/s</span>
             <span>·</span>
-            <span>Imbalance: <b :class="imbalanceMW < 0 ? 'text-rose-400' : imbalanceMW > 0 ? 'text-cyan-400' : 'text-emerald-400'">{{ (imbalanceMW >= 0 ? '+' : '') + imbalanceMW }}</b> MW</span>
+            <span>Imbalance: <b :class="imbalanceMW < 0 ? 'text-[#FDA4AF]' : imbalanceMW > 0 ? 'text-[#7DD3FC]' : 'text-[#86EFAC]'">{{ (imbalanceMW >= 0 ? '+' : '') + imbalanceMW }}</b> MW</span>
           </div>
         </div>
       </div>
 
       <!-- 60-Second Rolling Oscilloscope Chart -->
-      <div class="md:col-span-7 flex flex-col justify-between p-2.5 bg-[#071626] rounded-xl border border-slate-800 h-full min-h-[140px]">
-        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-1 px-1">
+      <div class="md:col-span-7 flex flex-col justify-between p-3 bg-[#091B2E] rounded-xl border border-slate-700 h-full min-h-[145px]">
+        <div class="flex items-center justify-between text-xs font-black text-[#E2E8F0] mb-1 px-1">
           <span>Rolling 40s Frequency Oscilloscope</span>
-          <span class="font-mono text-emerald-400">Target: 50.00 Hz</span>
+          <span class="font-mono text-[#4ADE80] font-black">Target: 50.00 Hz</span>
         </div>
 
-        <div class="relative w-full h-24 bg-slate-950/80 rounded-lg border border-slate-800/80 p-1 overflow-hidden">
+        <div class="relative w-full h-24 bg-slate-950 rounded-lg border border-slate-700 p-1 overflow-hidden">
           
           <!-- Grid Reference Lines -->
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-b border-emerald-500/40 border-dashed"></div>
-          <div class="absolute inset-x-0 top-[20%] border-b border-amber-500/20 text-[9px] text-amber-500/50 pl-1 font-mono">50.5 Hz</div>
-          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-500/20 text-[9px] text-amber-500/50 pl-1 font-mono">49.5 Hz</div>
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-b-2 border-[#389E5F]/50 border-dashed"></div>
+          <div class="absolute inset-x-0 top-[20%] border-b border-amber-400/30 text-[10px] text-amber-300 pl-1 font-mono font-bold">50.5 Hz</div>
+          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-400/30 text-[10px] text-amber-300 pl-1 font-mono font-bold">49.5 Hz</div>
 
           <!-- Dynamic SVG Waveform -->
           <svg viewBox="0 0 360 90" class="w-full h-full overflow-visible" preserveAspectRatio="none">
-            <!-- Glow effect filter -->
             <defs>
               <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -183,8 +182,8 @@ const statusBadgeClass = computed(() => {
             <polyline
               v-if="chartPoints"
               fill="none"
-              stroke="#10B981"
-              stroke-width="2.5"
+              stroke="#389E5F"
+              stroke-width="3"
               stroke-linecap="round"
               stroke-linejoin="round"
               filter="url(#glow)"

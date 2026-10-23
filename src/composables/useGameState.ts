@@ -3,8 +3,7 @@ import { ROUNDS } from '../data/roundScript';
 import { RoundDefinition, RoundScore, TeamScoreboardEntry } from '../types/grid';
 import { useWebAudioSynth } from './useWebAudioSynth';
 
-export function useGameState() {
-  const synth = useWebAudioSynth();
+const synth = useWebAudioSynth();
 
   // Current active round index (0 = Practice, 1-6 = Scored rounds)
   const currentRoundIndex = ref(0);
@@ -208,6 +207,7 @@ export function useGameState() {
     };
   });
 
+export function useGameState() {
   // Token manipulation methods
   function adjustKainji(delta: number) {
     if (isLocked.value) return;

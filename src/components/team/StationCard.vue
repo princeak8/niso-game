@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import StationVisual from './StationVisual.vue';
+import PlantIcon from './PlantIcon.vue';
+import type { PlantKind } from '../../types/grid';
 
 const props = defineProps<{
   id: 'kainji' | 'egbin' | 'geregu' | 'kano';
@@ -17,6 +20,7 @@ const props = defineProps<{
   isLocked: boolean;
   storeTokensAvailable: number;
   roundId: number;
+  compact?: boolean; // ring layout: hide the wide banner illustration, show the icon only
 }>();
 
 const emit = defineEmits<{
@@ -34,37 +38,68 @@ const rampChange = computed(() => {
   return props.currentTokens - props.previousRoundTokens;
 });
 
-// Color themes based on plant type
+// Which icon to show. Egbin is a steam-turbine thermal plant, Geregu is a gas turbine.
+// (plantType stays 'Gas' for both so the ramp-rule logic is untouched.)
+const iconKind = computed<PlantKind>(() => {
+  if (props.plantType === 'Hydro') return 'hydro';
+  if (props.plantType === 'Solar') return 'solar';
+  return props.id === 'egbin' ? 'steam' : 'gas';
+});
+const typeLabel = computed(() => ({ hydro: 'Hydro', gas: 'Gas', steam: 'Steam', solar: 'Solar' }[iconKind.value]));
+
+// Color themes and distinct borders based on plant type and station identity
 const theme = computed(() => {
-  switch (props.plantType) {
-    case 'Hydro':
-      return {
-        accent: 'teal',
-        border: 'border-teal-500/40',
-        bg: 'bg-teal-950/20',
-        tokenColor: 'bg-gradient-to-br from-teal-400 to-cyan-600 border-teal-200 text-teal-950',
-        badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
-        icon: '🌊',
-      };
-    case 'Gas':
-      return {
-        accent: 'amber',
-        border: 'border-amber-500/40',
-        bg: 'bg-amber-950/20',
-        tokenColor: 'bg-gradient-to-br from-amber-400 to-orange-600 border-amber-200 text-amber-950',
-        badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-        icon: '🔥',
-      };
-    case 'Solar':
-      return {
-        accent: 'yellow',
-        border: 'border-yellow-500/40',
-        bg: 'bg-yellow-950/20',
-        tokenColor: 'bg-gradient-to-br from-yellow-300 to-amber-500 border-yellow-100 text-yellow-950',
-        badgeBg: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-        icon: '☀️',
-      };
+  if (props.id === 'kainji') {
+    return {
+      accent: 'green',
+      cardClass: 'station-card-hydro',
+      border: 'border-2 border-[#389E5F]',
+      accentBar: 'bg-[#389E5F]',
+      bg: 'bg-[#132E4C]',
+      tokenColor: 'bg-gradient-to-br from-[#4ADE80] to-[#2B7A49] border-2 border-[#BBF7D0] text-white font-black shadow-md',
+      badgeBg: 'bg-[#389E5F]/30 text-[#86EFAC] border border-[#389E5F]',
+      icon: '🌊',
+      cardinal: 'North-West Edge · Kainji Dam',
+    };
   }
+  if (props.id === 'egbin') {
+    return {
+      accent: 'amber',
+      cardClass: 'station-card-gas-a',
+      border: 'border-2 border-amber-500',
+      accentBar: 'bg-amber-500',
+      bg: 'bg-[#132E4C]',
+      tokenColor: 'bg-gradient-to-br from-amber-300 to-orange-500 border-2 border-amber-100 text-slate-950 font-black shadow-md',
+      badgeBg: 'bg-amber-500/25 text-amber-200 border border-amber-500/50',
+      icon: '🏭',
+      cardinal: 'South-West Edge · Lagos Coast',
+    };
+  }
+  if (props.id === 'kano') {
+    return {
+      accent: 'yellow',
+      cardClass: 'station-card-solar',
+      border: 'border-2 border-yellow-400',
+      accentBar: 'bg-yellow-400',
+      bg: 'bg-[#132E4C]',
+      tokenColor: 'bg-gradient-to-br from-yellow-200 to-amber-400 border-2 border-yellow-100 text-slate-950 font-black shadow-md',
+      badgeBg: 'bg-yellow-500/25 text-yellow-200 border border-yellow-500/50',
+      icon: '☀️',
+      cardinal: 'North-East Edge · Kano Savannah',
+    };
+  }
+  // Geregu Gas B (Gas turbine)
+  return {
+    accent: 'orange',
+    cardClass: 'station-card-gas-b',
+    border: 'border-2 border-orange-500',
+    accentBar: 'bg-orange-500',
+    bg: 'bg-[#132E4C]',
+    tokenColor: 'bg-gradient-to-br from-amber-300 to-orange-500 border-2 border-amber-100 text-slate-950 font-black shadow-md',
+    badgeBg: 'bg-orange-500/25 text-orange-200 border border-orange-500/50',
+    icon: '⚡',
+    cardinal: 'South-East Edge · Kogi Confluence',
+  };
 });
 
 function handleDragOver(e: DragEvent) {
@@ -81,8 +116,9 @@ function handleDrop(e: DragEvent) {
 
 <template>
   <div
-    class="relative rounded-2xl border p-4 transition-all duration-200 shadow-lg flex flex-col justify-between"
+    class="relative rounded-2xl border p-4 transition-all duration-200 shadow-xl flex flex-col justify-between station-card overflow-hidden"
     :class="[
+      theme.cardClass,
       theme.border,
       theme.bg,
       isRampViolated ? 'ring-2 ring-rose-500 bg-rose-950/30' : 'bg-[#0B1E33]',
@@ -90,41 +126,57 @@ function handleDrop(e: DragEvent) {
     @dragover="handleDragOver"
     @drop="handleDrop"
   >
+    <!-- Top Accent Color Strip for Instant Plant Identification -->
+    <div class="absolute top-0 left-0 right-0 h-1.5" :class="theme.accentBar"></div>
     
-    <!-- Top Header -->
     <div>
-      <div class="flex items-start justify-between gap-2 mb-1.5">
+      <!-- High-Detail Visual Plant Illustration -->
+      <StationVisual
+        v-if="!compact"
+        :id="id"
+        :plant-type="plantType"
+        :current-m-w="currentMW"
+        :current-tokens="currentTokens"
+        :round-id="roundId"
+        :is-tripped="id === 'egbin' && roundId === 3"
+      />
+
+      <!-- Top Header & Edge Position -->
+      <div class="flex items-start justify-between gap-2 mb-2">
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-base">{{ theme.icon }}</span>
-            <h3 class="font-extrabold text-sm md:text-base text-slate-100 uppercase tracking-tight">
+            <PlantIcon :kind="iconKind" :size="compact ? 48 : 36" :active="currentMW > 0" />
+            <h3 class="font-black text-base md:text-lg text-white uppercase tracking-tight">
               {{ name }}
             </h3>
           </div>
-          <div class="text-[11px] font-semibold text-teal-300 tracking-wide">
+          <div class="text-xs font-black text-[#86EFAC] tracking-wide mt-0.5">
             {{ realName }}
           </div>
-          <div class="text-[10px] text-slate-400">
+          <div class="text-[11px] font-bold text-[#CBD5E1]">
             {{ location }}
+          </div>
+          <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider mt-0.5">
+            📍 {{ theme.cardinal }}
           </div>
         </div>
 
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase" :class="theme.badgeBg">
-          {{ plantType }} · {{ maxCapacityMW }} MW
+        <span class="text-xs font-black px-2.5 py-1 rounded-md border uppercase shadow-sm" :class="theme.badgeBg">
+          {{ typeLabel }} · {{ maxCapacityMW }} MW
         </span>
       </div>
 
       <!-- Live Dispatch Readout -->
-      <div class="flex items-center justify-between bg-slate-950/60 rounded-xl p-2.5 my-2 border border-slate-800">
+      <div class="flex items-center justify-between bg-[#091B2E] rounded-xl p-3 my-2 border border-slate-700 shadow-inner">
         <div>
-          <div class="text-[10px] uppercase font-bold text-slate-400">Current Generation</div>
-          <div class="text-xl font-black font-mono text-slate-100">
-            {{ currentMW }} <span class="text-xs font-sans text-slate-400">MW</span>
+          <div class="text-[11px] uppercase font-black text-[#CBD5E1]">Current Generation</div>
+          <div class="text-2xl font-black font-mono text-white mt-0.5">
+            {{ currentMW }} <span class="text-sm font-sans font-bold text-[#CBD5E1]">MW</span>
           </div>
         </div>
         <div class="text-right">
-          <div class="text-[10px] uppercase font-bold text-slate-400">Tokens on Board</div>
-          <div class="text-lg font-black font-mono text-teal-300">
+          <div class="text-[11px] uppercase font-black text-[#CBD5E1]">Tokens on Board</div>
+          <div class="text-xl font-black font-mono text-[#86EFAC] mt-0.5">
             {{ currentTokens }} / {{ maxCapacity }}
           </div>
         </div>
@@ -203,17 +255,17 @@ function handleDrop(e: DragEvent) {
     </div>
 
     <!-- Interactive Touch +/- Controls -->
-    <div v-if="isControlledByTeam" class="mt-3 pt-2 border-t border-slate-800">
+    <div v-if="isControlledByTeam" class="mt-3 pt-2.5 border-t border-slate-700">
       <div class="grid grid-cols-2 gap-2">
         <!-- Decrement Button -->
         <button
           type="button"
           @click="emit('adjust', -1)"
           :disabled="isLocked || currentTokens <= 0"
-          class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-900 disabled:opacity-30 disabled:pointer-events-none text-slate-100 font-extrabold text-sm md:text-base border border-slate-700 shadow flex items-center justify-center gap-1 transition"
+          class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-900 disabled:opacity-30 disabled:pointer-events-none text-white font-black text-base border-2 border-slate-600 shadow-md flex items-center justify-center gap-1.5 transition active:scale-95"
         >
-          <span>−</span>
-          <span class="text-xs font-mono">10 MW</span>
+          <span class="text-xl">−</span>
+          <span class="text-xs font-mono font-black">10 MW</span>
         </button>
 
         <!-- Increment Button -->
@@ -221,10 +273,10 @@ function handleDrop(e: DragEvent) {
           type="button"
           @click="emit('adjust', +1)"
           :disabled="isLocked || currentTokens >= maxAllowedInRound || storeTokensAvailable <= 0"
-          class="py-2.5 px-3 rounded-xl bg-[#0D626C] hover:bg-[#0A4D54] active:bg-[#083A3F] disabled:opacity-30 disabled:pointer-events-none text-white font-extrabold text-sm md:text-base border border-teal-400/40 shadow-md flex items-center justify-center gap-1 transition"
+          class="py-3 px-3 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] active:bg-[#1E5C35] disabled:opacity-30 disabled:pointer-events-none text-white font-black text-base border-2 border-[#52BF7B] shadow-lg shadow-green-950/60 flex items-center justify-center gap-1.5 transition active:scale-95"
         >
-          <span>+</span>
-          <span class="text-xs font-mono">10 MW</span>
+          <span class="text-xl">+</span>
+          <span class="text-xs font-mono font-black">10 MW</span>
         </button>
       </div>
     </div>

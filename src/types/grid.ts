@@ -1,3 +1,5 @@
+export type PlantKind = 'hydro' | 'gas' | 'steam' | 'solar';
+
 export type StationId = 'kainji' | 'egbin' | 'geregu' | 'kano';
 
 export interface PowerStation {

@@ -41,81 +41,81 @@ function handleSaveQuestion() {
   <div class="space-y-8 animate-fadeIn">
     
     <!-- Top Introduction Banner -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-6 shadow-xl">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-6 shadow-xl">
       <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-[#0D626C] text-white flex items-center justify-center text-2xl shadow-lg border border-teal-300/30">
+        <div class="w-12 h-12 rounded-xl bg-[#143D24] text-[#4ADE80] flex items-center justify-center text-2xl shadow-lg border-2 border-[#389E5F]/60">
           📋
         </div>
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-teal-300">
+          <span class="text-xs font-black uppercase tracking-wider text-[#86EFAC]">
             NISO Acculturation Programme · Day 2 Reflection
           </span>
           <h2 class="text-xl md:text-2xl font-black text-white mt-0.5">
             Post-Game Debrief & Control Room Tour Bridge
           </h2>
-          <p class="text-xs md:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+          <p class="text-xs md:text-sm text-slate-200 mt-1 max-w-3xl leading-relaxed font-medium">
             The game taught how a power grid operates in an <em>ideal world</em>.
-            Before stepping into the <strong>National Control Centre (NCC) Osogbo</strong> for your guided virtual tour, explore why real-world grid operations are vastly more complex.
+            Before stepping into the <strong class="text-white">National Control Centre (NCC) Osogbo</strong> for your guided virtual tour, explore why real-world grid operations are vastly more complex.
           </p>
         </div>
       </div>
     </div>
 
     <!-- Section 1: The 5 Guided Debrief Questions -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-6 shadow-xl">
-      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-700/60">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-6 shadow-xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b-2 border-[#1E3A5F]">
         <div>
           <h3 class="text-lg font-black text-white uppercase tracking-tight">
             1. The Five Debrief Questions (From Exercise Guide)
           </h3>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-slate-300 font-medium">
             Click through each question to review participant experiences and technical insights.
           </p>
         </div>
-        <span class="text-xs font-mono font-bold text-teal-300">
+        <span class="text-xs font-mono font-black text-[#4ADE80] bg-[#143D24] px-3 py-1 rounded-full border border-[#389E5F]/50">
           Question {{ activeQuestionIndex + 1 }} of {{ DEBRIEF_QUESTIONS.length }}
         </span>
       </div>
 
       <!-- Question Selector Tabs -->
-      <div class="grid grid-cols-5 gap-2 mb-6">
+      <div class="grid grid-cols-5 gap-2.5 mb-6">
         <button
           v-for="(q, idx) in DEBRIEF_QUESTIONS"
           :key="q.id"
           type="button"
           @click="activeQuestionIndex = idx"
           :class="[
-            'p-2.5 rounded-xl border text-center transition flex flex-col items-center justify-center gap-0.5',
+            'p-3 rounded-xl border text-center transition flex flex-col items-center justify-center gap-0.5',
             activeQuestionIndex === idx
-              ? 'bg-[#0D626C] text-white border-teal-300 font-black shadow-md'
-              : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white hover:bg-slate-800'
+              ? 'bg-[#389E5F] text-white border-2 border-[#BBF7D0] font-black shadow-lg shadow-[#389E5F]/40'
+              : 'bg-[#0B1726] text-slate-300 border border-slate-700 font-bold hover:text-white hover:bg-[#132E4C]'
           ]"
         >
-          <span class="text-[10px] font-bold uppercase">Q{{ q.id }}</span>
-          <span class="text-xs font-mono truncate w-full hidden sm:block">{{ q.question.substring(0, 14) }}...</span>
+          <span class="text-xs font-black uppercase">Q{{ q.id }}</span>
+          <span class="text-xs font-mono truncate w-full hidden sm:block font-bold">{{ q.question.substring(0, 14) }}...</span>
         </button>
       </div>
 
       <!-- Active Question Detailed Card -->
-      <div class="bg-slate-950/80 p-5 rounded-2xl border border-teal-500/30">
-        <div class="text-[10px] font-mono font-bold text-teal-400 uppercase tracking-widest mb-1">
+      <div class="bg-[#0B1726] p-6 rounded-2xl border-2 border-[#389E5F]/60 shadow-inner">
+        <div class="text-xs font-mono font-black text-[#4ADE80] uppercase tracking-widest mb-1.5">
           Context: {{ DEBRIEF_QUESTIONS[activeQuestionIndex].context }}
         </div>
-        <h4 class="text-lg md:text-xl font-black text-white mb-3">
+        <h4 class="text-lg md:text-xl font-black text-white mb-4">
           "{{ DEBRIEF_QUESTIONS[activeQuestionIndex].question }}"
         </h4>
 
-        <div class="mt-4 pt-3 border-t border-slate-800">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+        <div class="mt-4 pt-3 border-t-2 border-[#1E3A5F]">
+          <div class="text-xs font-black uppercase tracking-wider text-slate-200 mb-3">
             Key Participant Insights & Facilitator Debrief Notes:
           </div>
-          <ul class="space-y-2">
+          <ul class="space-y-2.5">
             <li
               v-for="(answer, aIdx) in DEBRIEF_QUESTIONS[activeQuestionIndex].sampleAnswers"
               :key="aIdx"
-              class="flex items-start gap-2 text-xs md:text-sm text-slate-200 leading-relaxed bg-slate-900/60 p-2.5 rounded-xl border border-slate-800"
+              class="flex items-start gap-2.5 text-xs md:text-sm text-slate-100 leading-relaxed bg-[#0F243A] p-3 rounded-xl border border-[#1E3A5F] font-medium"
             >
-              <span class="text-teal-400 font-bold">▸</span>
+              <span class="text-[#4ADE80] font-black text-base leading-none mt-0.5">▸</span>
               <span>{{ answer }}</span>
             </li>
           </ul>
@@ -124,17 +124,17 @@ function handleSaveQuestion() {
     </div>
 
     <!-- Section 2: Interactive "Ideal World" List Builder -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-6 shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-700/60">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-6 shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b-2 border-[#1E3A5F]">
         <div>
           <h3 class="text-lg font-black text-white uppercase tracking-tight">
             2. The "Ideal World" List Builder (Flip-Chart)
           </h3>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-slate-300 font-medium">
             In question 5, dispatchers list what made the game easier than running the real Nigerian grid.
           </p>
         </div>
-        <span class="text-[10px] font-bold px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 uppercase">
+        <span class="text-xs font-black px-3 py-1 rounded bg-[#143D24] text-[#86EFAC] border border-[#389E5F]/50 uppercase tracking-wide">
           {{ idealWorldItems.length }} Assumptions Tracked
         </span>
       </div>
@@ -144,29 +144,29 @@ function handleSaveQuestion() {
         <div
           v-for="item in idealWorldItems"
           :key="item.id"
-          class="bg-slate-950/70 p-4 rounded-xl border border-slate-800 flex flex-col justify-between"
+          class="bg-[#0B1726] p-4 rounded-xl border border-[#1E3A5F] flex flex-col justify-between shadow-md"
         >
           <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-teal-300 border border-slate-700">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded bg-[#143D24] text-[#86EFAC] border border-[#389E5F]/50">
                 {{ item.category }}
               </span>
-              <span class="text-[10px] text-emerald-400 font-bold">Ideal World Assumption</span>
+              <span class="text-xs text-[#4ADE80] font-black">Ideal World Assumption</span>
             </div>
-            <h5 class="text-sm font-bold text-white mb-2 leading-snug">
+            <h5 class="text-sm font-black text-white mb-2 leading-snug">
               {{ item.idealAssumption }}
             </h5>
           </div>
 
-          <div class="pt-2 border-t border-slate-800/80 text-[11px] text-amber-300/90 leading-relaxed">
-            <strong class="text-amber-400">Real Life in Nigeria:</strong> {{ item.realWorldReality }}
+          <div class="pt-2.5 border-t border-[#1E3A5F] text-xs text-amber-200 leading-relaxed font-medium">
+            <strong class="text-amber-300 font-black">Real Life in Nigeria:</strong> {{ item.realWorldReality }}
           </div>
         </div>
       </div>
 
       <!-- Add New Custom Assumption -->
-      <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+      <div class="bg-[#0B1726] p-5 rounded-xl border-2 border-[#1E3A5F]">
+        <div class="text-xs font-black uppercase tracking-wider text-slate-200 mb-2">
           + Add Participant Observation to Ideal List
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
@@ -174,20 +174,20 @@ function handleSaveQuestion() {
             v-model="newIdealAssumption"
             type="text"
             placeholder="In the game (Ideal Assumption)..."
-            class="bg-slate-900 border border-slate-700 text-slate-100 rounded-lg p-2 text-xs font-medium focus:ring-2 focus:ring-teal-500"
+            class="bg-[#0F243A] border-2 border-[#1E3A5F] text-white rounded-lg p-2.5 text-xs font-bold focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
           />
           <input
             v-model="newRealReality"
             type="text"
             placeholder="In real life (Nigerian Grid Reality)..."
-            class="bg-slate-900 border border-slate-700 text-slate-100 rounded-lg p-2 text-xs font-medium focus:ring-2 focus:ring-teal-500"
+            class="bg-[#0F243A] border-2 border-[#1E3A5F] text-white rounded-lg p-2.5 text-xs font-bold focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
           />
         </div>
         <div class="flex justify-end">
           <button
             type="button"
             @click="handleAddIdealItem"
-            class="px-4 py-2 rounded-xl bg-[#0D626C] hover:bg-[#0A4D54] text-white font-bold text-xs uppercase tracking-wider transition"
+            class="px-5 py-2.5 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#389E5F]/30 transition"
           >
             Add to Flip-Chart List
           </button>
@@ -196,12 +196,12 @@ function handleSaveQuestion() {
     </div>
 
     <!-- Section 3: Ideal vs Reality Bridge to Control Room Tour -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-6 shadow-xl">
-      <div class="mb-4 pb-3 border-b border-slate-700/60">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-6 shadow-xl">
+      <div class="mb-4 pb-3 border-b-2 border-[#1E3A5F]">
         <h3 class="text-lg font-black text-white uppercase tracking-tight">
           3. "Ideal vs Reality" Bridge (Guided Virtual Tour Prep)
         </h3>
-        <p class="text-xs text-slate-400">
+        <p class="text-xs text-slate-300 font-medium">
           Step 7 from the exercise guide: "Keep your list of ideal things. In the tour, watch for how real life is different."
         </p>
       </div>
@@ -211,53 +211,53 @@ function handleSaveQuestion() {
         <div
           v-for="point in TOUR_BRIDGE_POINTS"
           :key="point.title"
-          class="bg-slate-950/70 p-4 rounded-xl border border-slate-800 space-y-3"
+          class="bg-[#0B1726] p-5 rounded-xl border border-[#1E3A5F] space-y-3 shadow-md"
         >
-          <div class="flex items-center gap-2">
-            <span class="text-xl">{{ point.icon }}</span>
-            <h4 class="font-extrabold text-sm text-teal-300 uppercase">
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl">{{ point.icon }}</span>
+            <h4 class="font-black text-sm text-[#4ADE80] uppercase">
               {{ point.title }}
             </h4>
           </div>
 
-          <div class="text-xs text-slate-300">
-            <strong class="text-slate-400 uppercase text-[10px] block">Game Principle:</strong>
+          <div class="text-xs text-slate-200">
+            <strong class="text-slate-400 uppercase text-[10px] font-black block mb-0.5">Game Principle:</strong>
             {{ point.gameConcept }}
           </div>
 
-          <div class="text-xs text-cyan-200 bg-cyan-950/30 p-2.5 rounded-lg border border-cyan-500/20 leading-relaxed">
-            <strong class="text-cyan-400 uppercase text-[10px] block">NCC Osogbo Control Room Reality:</strong>
+          <div class="text-xs text-sky-100 bg-[#0B2538] p-3 rounded-lg border-2 border-sky-400/40 leading-relaxed font-medium">
+            <strong class="text-sky-300 uppercase text-[10px] font-black block mb-0.5">NCC Osogbo Control Room Reality:</strong>
             {{ point.nccReality }}
           </div>
         </div>
       </div>
 
       <!-- Inductee Tour Question Notepad -->
-      <div class="bg-slate-950/80 p-4 rounded-xl border border-teal-500/40">
-        <div class="text-xs font-bold uppercase tracking-wider text-teal-300 mb-1">
+      <div class="bg-[#0B1726] p-5 rounded-xl border-2 border-[#389E5F]/60">
+        <div class="text-xs font-black uppercase tracking-wider text-[#86EFAC] mb-1">
           Your Question for the NCC Control Room Dispatch Engineers:
         </div>
-        <p class="text-xs text-slate-400 mb-3">
+        <p class="text-xs text-slate-300 mb-3 font-medium">
           As instructed in Step 7 of the guide, write down one specific operational question based on what you experienced during the simulation.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-2">
+        <div class="flex flex-col sm:flex-row gap-2.5">
           <input
             v-model="userTourQuestion"
             type="text"
             placeholder="e.g., How does NCC Osogbo manage spinning reserve when hydro water head is low during the dry season?"
-            class="flex-1 bg-slate-900 border border-slate-700 text-slate-100 rounded-lg p-2.5 text-xs font-medium focus:ring-2 focus:ring-teal-500"
+            class="flex-1 bg-[#0F243A] border-2 border-[#1E3A5F] text-white rounded-lg p-2.5 text-xs font-bold focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
           />
           <button
             type="button"
             @click="handleSaveQuestion"
-            class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs uppercase tracking-wider transition whitespace-nowrap"
+            class="px-6 py-2.5 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#389E5F]/30 transition whitespace-nowrap"
           >
             Save Note
           </button>
         </div>
 
-        <div v-if="isQuestionSaved" class="mt-2 text-xs font-bold text-emerald-400 animate-fadeIn">
+        <div v-if="isQuestionSaved" class="mt-2 text-xs font-black text-[#4ADE80] animate-fadeIn">
           ✓ Question saved! Keep this ready for the virtual control room tour engineers.
         </div>
       </div>

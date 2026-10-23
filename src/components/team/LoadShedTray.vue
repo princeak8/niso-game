@@ -10,27 +10,27 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-4 shadow-xl flex flex-col justify-between">
+  <div class="bg-[#132E4C] border-2 border-[#389E5F]/50 rounded-2xl p-4 md:p-5 shadow-2xl flex flex-col justify-between">
     
     <div>
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2">
-          <span class="text-xl">🔌</span>
-          <h3 class="font-extrabold text-sm md:text-base text-slate-100 uppercase tracking-tight">
+          <span class="text-2xl">🔌</span>
+          <h3 class="font-black text-base text-white uppercase tracking-tight">
             Emergency Load Shedding
           </h3>
         </div>
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+        <span class="text-xs font-black px-2.5 py-1 rounded-md bg-rose-500/25 text-[#FDA4AF] border border-rose-500/50">
           Last Resort Mechanism
         </span>
       </div>
 
-      <p class="text-xs text-slate-400 mb-3">
-        Rule 5: You may cut demand by up to 3 tokens (30 MW). <strong>Each token cut costs −1 point</strong> because customers lose power!
+      <p class="text-xs text-[#E2E8F0] font-bold mb-3.5">
+        Rule 5: You may cut demand by up to 3 tokens (30 MW). <strong class="text-rose-300">Each token cut costs −1 point</strong> because customers lose power!
       </p>
 
       <!-- Token Selector Buttons -->
-      <div class="grid grid-cols-4 gap-2 mb-3">
+      <div class="grid grid-cols-4 gap-2.5 mb-3.5">
         <button
           v-for="tokens in [0, 1, 2, 3]"
           :key="tokens"
@@ -38,26 +38,26 @@ const emit = defineEmits<{
           @click="emit('update:loadShedTokens', tokens)"
           :disabled="isLocked"
           :class="[
-            'py-2.5 rounded-xl font-bold text-xs md:text-sm border transition flex flex-col items-center justify-center gap-0.5',
+            'py-3 rounded-xl font-black text-xs md:text-sm border-2 transition flex flex-col items-center justify-center gap-0.5',
             loadShedTokens === tokens
               ? tokens === 0
-                ? 'bg-emerald-600 text-white border-emerald-400 shadow-md'
-                : 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-950/50'
-              : 'bg-slate-900 text-slate-300 hover:text-white border-slate-800 hover:bg-slate-800'
+                ? 'bg-[#389E5F] text-white border-[#BBF7D0] shadow-lg shadow-green-950/60 scale-102'
+                : 'bg-rose-600 text-white border-rose-300 shadow-lg shadow-rose-950/60 scale-102'
+              : 'bg-[#091B2E] text-[#E2E8F0] hover:text-white border-slate-700 hover:bg-slate-800'
           ]"
         >
           <span>{{ tokens === 0 ? 'None (0)' : `${tokens} Token${tokens > 1 ? 's' : ''}` }}</span>
-          <span class="text-[10px] font-mono opacity-80">{{ tokens * 10 }} MW</span>
+          <span class="text-[11px] font-mono font-bold opacity-90">{{ tokens * 10 }} MW</span>
         </button>
       </div>
     </div>
 
     <!-- Live Status / Penalty Alert -->
     <div
-      class="p-2.5 rounded-xl border text-xs flex items-center justify-between"
-      :class="loadShedTokens > 0 ? 'bg-rose-950/40 border-rose-500/40 text-rose-200' : 'bg-slate-950/60 border-slate-800 text-slate-400'"
+      class="p-3 rounded-xl border-2 text-xs flex items-center justify-between shadow-inner"
+      :class="loadShedTokens > 0 ? 'bg-rose-950/60 border-rose-500 text-rose-100' : 'bg-[#091B2E] border-slate-700 text-[#CBD5E1]'"
     >
-      <span class="font-medium">
+      <span class="font-black text-sm">
         {{ loadShedTokens > 0 ? `Cutting ${loadShedTokens * 10} MW of customer load` : 'Full demand supplied (zero load shed)' }}
       </span>
       <span class="font-bold font-mono px-2 py-0.5 rounded" :class="loadShedTokens > 0 ? 'bg-rose-500/30 text-rose-300' : 'bg-slate-800 text-slate-400'">

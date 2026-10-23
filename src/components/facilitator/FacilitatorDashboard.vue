@@ -61,10 +61,10 @@ function setOverrideScore(teamId: string, roundId: number) {
   <div class="space-y-6">
     
     <!-- Facilitator Master Control Deck -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-4 shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-700/60">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-5 shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b-2 border-[#1E3A5F]">
         <div>
-          <div class="text-[10px] font-bold uppercase tracking-wider text-teal-300">
+          <div class="text-xs font-black uppercase tracking-wider text-[#86EFAC]">
             Facilitator Master Deck
           </div>
           <h2 class="text-xl md:text-2xl font-black text-white">
@@ -72,11 +72,11 @@ function setOverrideScore(teamId: string, roundId: number) {
           </h2>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5">
           <button
             type="button"
             @click="showSolutionModal = true"
-            class="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition"
+            class="px-4 py-2.5 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#389E5F]/30 flex items-center gap-2 transition active:scale-95"
           >
             <span>🔑</span>
             <span>View Solution Key</span>
@@ -85,7 +85,7 @@ function setOverrideScore(teamId: string, roundId: number) {
           <button
             type="button"
             @click="handleRingBell"
-            class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition"
+            class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center gap-2 transition active:scale-95"
           >
             <span>🔔</span>
             <span>Ring Bell: "Hands Off!"</span>
@@ -97,14 +97,14 @@ function setOverrideScore(teamId: string, roundId: number) {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         
         <!-- Round Selector -->
-        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-          <div class="text-[10px] font-bold uppercase text-slate-400 mb-1.5">
+        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
+          <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
             1. Orchestrate Active Round
           </div>
           <select
             :value="game.currentRoundIndex.value"
             @change="e => game.initializeRound(Number((e.target as HTMLSelectElement).value))"
-            class="w-full bg-slate-900 border border-slate-700 text-slate-100 rounded-lg p-2 text-xs font-bold font-mono focus:ring-2 focus:ring-teal-500"
+            class="w-full bg-[#0F243A] border-2 border-[#1E3A5F] text-white rounded-lg p-2 text-xs font-bold font-mono focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
           >
             <option
               v-for="(r, idx) in game.ROUNDS"
@@ -114,43 +114,43 @@ function setOverrideScore(teamId: string, roundId: number) {
               {{ r.name }} ({{ r.timeOfDay }}) - Demand: {{ r.demandMW }}MW
             </option>
           </select>
-          <div class="mt-2 text-[11px] text-teal-300 font-medium">
-            Tokens Needed: <strong>{{ game.currentRound.value.tokensNeeded }}</strong> ({{ game.currentRound.value.tokensNeeded * 10 }} MW)
+          <div class="mt-2 text-xs text-[#86EFAC] font-bold">
+            Tokens Needed: <strong class="text-white">{{ game.currentRound.value.tokensNeeded }}</strong> ({{ game.currentRound.value.tokensNeeded * 10 }} MW)
           </div>
         </div>
 
         <!-- 2-Minute Timer Controls -->
-        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-          <div class="text-[10px] font-bold uppercase text-slate-400 mb-1.5">
+        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
+          <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
             2. Round Timer (2:00 Minutes)
           </div>
           <div class="flex items-center justify-between mb-2">
-            <span class="text-2xl font-black font-mono text-teal-300">
+            <span class="text-3xl font-black font-mono text-[#4ADE80]">
               {{ Math.floor(game.timerSeconds.value / 60) }}:{{ (game.timerSeconds.value % 60) < 10 ? '0' : '' }}{{ game.timerSeconds.value % 60 }}
             </span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase" :class="game.isLocked.value ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'">
+            <span class="text-xs font-black px-2.5 py-1 rounded uppercase tracking-wide" :class="game.isLocked.value ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-[#143D24] text-[#4ADE80] border border-[#389E5F]/50'">
               {{ game.isLocked.value ? 'Locked (Hands Off)' : game.timerRunning.value ? 'Running' : 'Paused' }}
             </span>
           </div>
-          <div class="flex gap-1.5">
+          <div class="flex gap-2">
             <button
               type="button"
               @click="game.startTimer"
-              class="flex-1 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs"
+              class="flex-1 py-1.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase shadow transition"
             >
               Start
             </button>
             <button
               type="button"
               @click="game.pauseTimer"
-              class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs"
+              class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-white font-bold text-xs uppercase transition"
             >
               Pause
             </button>
             <button
               type="button"
               @click="game.resetTimer"
-              class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs"
+              class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-slate-200 font-bold text-xs uppercase transition"
             >
               Reset
             </button>
@@ -158,26 +158,26 @@ function setOverrideScore(teamId: string, roundId: number) {
         </div>
 
         <!-- Manual Event Injections -->
-        <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-          <div class="text-[10px] font-bold uppercase text-slate-400 mb-1.5">
+        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
+          <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
             3. In-Game Contingency Injections
           </div>
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-2">
             <button
               type="button"
               @click="handleTriggerTrip"
-              class="py-1.5 px-2 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-200 font-bold text-xs text-left flex items-center justify-between"
+              class="py-2 px-3 rounded-lg bg-rose-950/80 hover:bg-rose-900 border-2 border-rose-500/60 text-white font-black text-xs text-left flex items-center justify-between transition"
             >
               <span>🚨 Inject Egbin Gas Trip (R3)</span>
-              <span class="text-[10px] font-mono">0 MW</span>
+              <span class="text-xs font-mono font-bold bg-rose-900 px-1.5 py-0.5 rounded">0 MW</span>
             </button>
             <button
               type="button"
               @click="game.advanceNextRound"
-              class="py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs text-left flex items-center justify-between"
+              class="py-2 px-3 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] border border-[#1E3A5F] text-white font-bold text-xs text-left flex items-center justify-between transition"
             >
               <span>Advance to Next Round</span>
-              <span class="text-[10px]">→</span>
+              <span class="text-sm font-bold">→</span>
             </button>
           </div>
         </div>
@@ -186,13 +186,13 @@ function setOverrideScore(teamId: string, roundId: number) {
     </div>
 
     <!-- Multi-Team Tournament Scoreboard & Inspector Sheets -->
-    <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-4 shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-700/60">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-5 shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b-2 border-[#1E3A5F]">
         <div>
           <h3 class="text-lg font-black text-white uppercase tracking-tight">
             Multi-Team Tournament Standings & Inspector Sheet
           </h3>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-slate-300 font-medium">
             Official ranking awarded at the end: 1st (10 pts), 2nd (7 pts), 3rd (5 pts), Others (3 pts).
           </p>
         </div>
@@ -203,13 +203,13 @@ function setOverrideScore(teamId: string, roundId: number) {
             v-model="newTeamName"
             type="text"
             placeholder="New Team Name..."
-            class="bg-slate-900 border border-slate-700 text-slate-100 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-teal-500"
+            class="bg-[#0B1726] border-2 border-[#1E3A5F] text-white rounded-lg px-3 py-1.5 text-xs font-bold focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
             @keyup.enter="handleAddTeam"
           />
           <button
             type="button"
             @click="handleAddTeam"
-            class="px-3 py-1.5 rounded-lg bg-[#0D626C] hover:bg-[#0A4D54] text-white font-bold text-xs"
+            class="px-4 py-2 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase shadow-md transition"
           >
             + Add Team
           </button>
@@ -217,10 +217,10 @@ function setOverrideScore(teamId: string, roundId: number) {
       </div>
 
       <!-- Leaderboard & Score Table -->
-      <div class="overflow-x-auto mt-4 rounded-xl border border-slate-800">
+      <div class="overflow-x-auto mt-4 rounded-xl border-2 border-[#1E3A5F]">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-slate-950/80 text-slate-300 text-[10px] uppercase font-bold border-b border-slate-800">
+            <tr class="bg-[#0B1726] text-slate-200 text-xs uppercase font-black border-b-2 border-[#1E3A5F]">
               <th class="p-3">Rank</th>
               <th class="p-3">Team</th>
               <th class="p-3 text-center">Practice</th>
@@ -230,26 +230,26 @@ function setOverrideScore(teamId: string, roundId: number) {
               <th class="p-3 text-center">R4 (Restart)</th>
               <th class="p-3 text-center">R5 (Peak)</th>
               <th class="p-3 text-center">R6 (Outage)</th>
-              <th class="p-3 text-center font-black text-teal-300">Total Game Pts</th>
+              <th class="p-3 text-center font-black text-[#4ADE80]">Total Game Pts</th>
               <th class="p-3 text-center font-black text-amber-300">Tournament Rank Pts</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-800/80 text-xs font-mono">
+          <tbody class="divide-y divide-[#1E3A5F] text-xs font-mono">
             <tr
               v-for="team in game.teams.value"
               :key="team.id"
-              class="hover:bg-slate-800/30 transition"
-              :class="{ 'bg-teal-950/20': team.rank === 1 }"
+              class="hover:bg-[#132E4C]/50 transition"
+              :class="{ 'bg-[#143D24]/40': team.rank === 1 }"
             >
               <!-- Rank Badge -->
               <td class="p-3 font-sans font-black">
                 <span
-                  class="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs"
+                  class="w-7 h-7 rounded-full inline-flex items-center justify-center text-xs font-black shadow"
                   :class="[
-                    team.rank === 1 ? 'bg-amber-500 text-black shadow-md' :
-                    team.rank === 2 ? 'bg-slate-300 text-black' :
-                    team.rank === 3 ? 'bg-amber-700 text-white' :
-                    'bg-slate-800 text-slate-400'
+                    team.rank === 1 ? 'bg-amber-400 text-black font-black ring-2 ring-amber-300 shadow-md' :
+                    team.rank === 2 ? 'bg-slate-200 text-black font-black' :
+                    team.rank === 3 ? 'bg-amber-700 text-white font-bold' :
+                    'bg-[#0B1726] text-slate-300 border border-slate-700 font-bold'
                   ]"
                 >
                   {{ team.rank || '-' }}
@@ -257,7 +257,7 @@ function setOverrideScore(teamId: string, roundId: number) {
               </td>
 
               <!-- Team Name -->
-              <td class="p-3 font-sans font-bold text-slate-100">
+              <td class="p-3 font-sans font-black text-white text-sm">
                 {{ team.name }}
               </td>
 
@@ -269,8 +269,8 @@ function setOverrideScore(teamId: string, roundId: number) {
               >
                 <div v-if="team.scores[roundId]" class="flex flex-col items-center">
                   <span
-                    class="font-bold text-xs"
-                    :class="team.scores[roundId]?.finalScore === 0 ? 'text-rose-400' : 'text-slate-100'"
+                    class="font-black text-xs"
+                    :class="team.scores[roundId]?.finalScore === 0 ? 'text-rose-400' : 'text-white'"
                   >
                     {{ roundId === 0 ? '✓' : `+${team.scores[roundId]?.finalScore}` }}
                   </span>
@@ -280,21 +280,21 @@ function setOverrideScore(teamId: string, roundId: number) {
                     type="button"
                     @click="overrideTeamId = team.id; selectedRoundToScore = roundId; overrideScoreValue = team.scores[roundId]?.finalScore || 0"
                     title="Facilitator Override Dispute"
-                    class="text-[9px] text-slate-500 hover:text-teal-300 underline font-sans"
+                    class="text-[10px] text-slate-400 hover:text-[#4ADE80] underline font-sans font-bold"
                   >
                     adj
                   </button>
                 </div>
-                <span v-else class="text-slate-600 font-sans text-[11px]">-</span>
+                <span v-else class="text-slate-500 font-sans text-xs font-bold">-</span>
               </td>
 
               <!-- Total Game Points -->
-              <td class="p-3 text-center font-black text-sm text-teal-300">
+              <td class="p-3 text-center font-black text-base text-[#4ADE80]">
                 {{ team.totalScore }}
               </td>
 
               <!-- Tournament Points Allocated -->
-              <td class="p-3 text-center font-black text-sm text-amber-300">
+              <td class="p-3 text-center font-black text-base text-amber-300">
                 {{ team.tournamentPoints }} pts
               </td>
             </tr>
@@ -305,17 +305,17 @@ function setOverrideScore(teamId: string, roundId: number) {
       <!-- Facilitator Dispute Arbiter Drawer if override clicked -->
       <div
         v-if="overrideTeamId"
-        class="mt-4 p-4 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-100 text-xs flex flex-wrap items-center justify-between gap-3 animate-fadeIn"
+        class="mt-4 p-4 rounded-xl bg-amber-950/40 border-2 border-amber-500/60 text-amber-100 text-xs flex flex-wrap items-center justify-between gap-3 animate-fadeIn"
       >
         <div class="flex items-center gap-2">
-          <span class="text-lg">⚖️</span>
+          <span class="text-2xl">⚖️</span>
           <div>
-            <div class="font-bold uppercase tracking-wider text-amber-300">
+            <div class="font-black uppercase tracking-wider text-amber-300 text-xs">
               Facilitator Dispute Arbiter:
             </div>
-            <span>
+            <span class="font-medium text-slate-200">
               Adjusting Round {{ selectedRoundToScore }} Score for
-              <strong>{{ game.teams.value.find(t => t.id === overrideTeamId)?.name }}</strong>
+              <strong class="text-white">{{ game.teams.value.find(t => t.id === overrideTeamId)?.name }}</strong>
             </span>
           </div>
         </div>
@@ -326,19 +326,19 @@ function setOverrideScore(teamId: string, roundId: number) {
             type="number"
             min="0"
             max="4"
-            class="w-16 bg-slate-900 border border-slate-700 text-white rounded-lg p-1.5 text-center font-mono font-bold"
+            class="w-16 bg-[#0B1726] border-2 border-amber-500 text-white rounded-lg p-1.5 text-center font-mono font-black text-sm"
           />
           <button
             type="button"
             @click="setOverrideScore(overrideTeamId, selectedRoundToScore)"
-            class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold"
+            class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-xs uppercase shadow transition"
           >
             Confirm Override
           </button>
           <button
             type="button"
             @click="overrideTeamId = null"
-            class="px-2 py-1.5 text-slate-400 hover:text-white"
+            class="px-3 py-2 text-slate-300 hover:text-white font-bold"
           >
             Cancel
           </button>
