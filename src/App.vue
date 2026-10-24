@@ -44,7 +44,7 @@ onMounted(() => {
     />
 
     <!-- Main Dynamic Content Container (Full Viewport Fit) -->
-    <main class="flex-1 min-h-0 w-full px-2 py-1.5 md:px-3 md:py-2 overflow-y-auto lg:overflow-y-auto">
+    <main class="flex-1 min-h-0 w-full px-1.5 py-1 md:px-2.5 md:py-1 overflow-y-auto">
       
       <!-- Team Dispatcher Mode -->
       <TeamPlayView

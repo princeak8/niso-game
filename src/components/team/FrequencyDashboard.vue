@@ -59,12 +59,12 @@ const statusBadgeClass = computed(() => {
 </script>
 
 <template>
-  <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-xl p-2 sm:p-2.5 shadow-lg">
+  <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-lg p-1 sm:p-1.5 shadow-md">
     
     <!-- Header with Frequency & Controller View Toggle -->
-    <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5 pb-1.5 border-b border-slate-700/60">
+    <div class="flex flex-wrap items-center justify-between gap-1 mb-1 pb-0.5 border-b border-slate-700/60">
       <div class="flex items-center gap-1.5">
-        <span class="w-2.5 h-2.5 rounded-full animate-ping shrink-0" :class="{
+        <span class="w-2 h-2 rounded-full animate-ping shrink-0" :class="{
           'bg-emerald-400': statusBand === 'normal',
           'bg-amber-400': statusBand === 'alert',
           'bg-rose-500': statusBand.startsWith('critical')
@@ -72,7 +72,7 @@ const statusBadgeClass = computed(() => {
         <h2 class="text-xs font-black uppercase tracking-wider text-slate-200">
           Grid Frequency (50.00 Hz)
         </h2>
-        <span class="text-[9px] font-bold px-1.5 py-0.2 rounded border" :class="statusBadgeClass">
+        <span class="text-[8px] font-bold px-1.5 py-0.2 rounded border" :class="statusBadgeClass">
           {{ statusBand === 'normal' ? 'Normal (49.5–50.5)' : statusBand === 'alert' ? 'Alert Band' : 'CRITICAL TRIP' }}
         </span>
       </div>
@@ -82,7 +82,7 @@ const statusBadgeClass = computed(() => {
           type="button"
           @click="emit('update:isControllerView', !isControllerView)"
           :class="[
-            'px-2 py-0.5 rounded text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer',
+            'px-1.5 py-0.2 rounded text-[9px] font-bold border transition flex items-center gap-1 cursor-pointer',
             isControllerView
               ? 'bg-cyan-600 text-white border-cyan-400 shadow-sm'
               : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700'
@@ -95,11 +95,11 @@ const statusBadgeClass = computed(() => {
     </div>
 
     <!-- Main Visuals Grid: Gauge + Rolling Line Chart -->
-    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-1 items-center">
       
       <!-- Semi-Circular Radial Gauge -->
-      <div class="sm:col-span-5 flex flex-col items-center justify-center p-1.5 bg-[#071626] rounded-lg border border-slate-800">
-        <div class="relative w-32 h-16 overflow-hidden flex items-end justify-center">
+      <div class="sm:col-span-5 flex flex-col items-center justify-center p-0.5 bg-[#071626] rounded-lg border border-slate-800">
+        <div class="relative w-20 h-10 overflow-hidden flex items-end justify-center">
           
           <!-- Gauge Arc Background SVG -->
           <svg viewBox="0 0 200 110" class="w-full h-full">
@@ -127,22 +127,22 @@ const statusBadgeClass = computed(() => {
 
           <!-- Dynamic SVG Needle -->
           <div
-            class="absolute bottom-0 w-1 h-14 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-md"
+            class="absolute bottom-0 w-0.5 h-8 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-md"
             :style="{ transform: `rotate(${needleAngle}deg)` }"
           ></div>
         </div>
 
         <!-- Frequency Digital Readout -->
         <div class="mt-0.5 text-center">
-          <div class="text-xl sm:text-2xl font-black font-mono tracking-tight leading-tight" :class="{
+          <div class="text-sm sm:text-base font-black font-mono tracking-tight leading-tight" :class="{
             'text-[#4ADE80]': statusBand === 'normal',
             'text-[#FBBF24]': statusBand === 'alert',
             'text-[#F87171]': statusBand.startsWith('critical')
           }">
-            {{ frequency.toFixed(2) }} <span class="text-xs font-sans font-extrabold text-slate-300">Hz</span>
+            {{ frequency.toFixed(2) }} <span class="text-[9px] font-sans font-extrabold text-slate-300">Hz</span>
           </div>
 
-          <div class="flex items-center justify-center gap-2 text-[10px] font-mono font-bold text-slate-300">
+          <div class="flex items-center justify-center gap-1 text-[8px] font-mono font-bold text-slate-300">
             <span>RoCoF: <b :class="rocof < 0 ? 'text-[#FCD34D]' : 'text-white'">{{ (rocof >= 0 ? '+' : '') + rocof.toFixed(2) }}</b></span>
             <span>·</span>
             <span>Δ: <b :class="imbalanceMW < 0 ? 'text-[#FDA4AF]' : imbalanceMW > 0 ? 'text-[#7DD3FC]' : 'text-[#86EFAC]'">{{ (imbalanceMW >= 0 ? '+' : '') + imbalanceMW }}MW</b></span>
@@ -151,17 +151,17 @@ const statusBadgeClass = computed(() => {
       </div>
 
       <!-- 40-Second Rolling Oscilloscope Chart -->
-      <div class="sm:col-span-7 flex flex-col justify-between p-2 bg-[#091B2E] rounded-lg border border-slate-700 min-h-[110px]">
-        <div class="flex items-center justify-between text-[10px] font-black text-slate-300 mb-0.5">
+      <div class="sm:col-span-7 flex flex-col justify-between p-1 bg-[#091B2E] rounded-lg border border-slate-700 min-h-[70px]">
+        <div class="flex items-center justify-between text-[8px] font-black text-slate-300 mb-0.5">
           <span>Oscilloscope</span>
           <span class="font-mono text-[#4ADE80]">Target: 50.00 Hz</span>
         </div>
 
-        <div class="relative w-full h-16 bg-slate-950 rounded border border-slate-800 p-0.5 overflow-hidden">
+        <div class="relative w-full h-10 bg-slate-950 rounded border border-slate-800 p-0.5 overflow-hidden">
           <!-- Grid Reference Lines -->
           <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-b border-[#389E5F]/50 border-dashed"></div>
-          <div class="absolute inset-x-0 top-[20%] border-b border-amber-400/20 text-[8px] text-amber-300/80 pl-0.5 font-mono">50.5</div>
-          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-400/20 text-[8px] text-amber-300/80 pl-0.5 font-mono">49.5</div>
+          <div class="absolute inset-x-0 top-[20%] border-b border-amber-400/20 text-[7px] text-amber-300/80 pl-0.5 font-mono">50.5</div>
+          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-400/20 text-[7px] text-amber-300/80 pl-0.5 font-mono">49.5</div>
 
           <!-- Dynamic SVG Waveform -->
           <svg viewBox="0 0 360 90" class="w-full h-full overflow-visible" preserveAspectRatio="none">
@@ -177,7 +177,7 @@ const statusBadgeClass = computed(() => {
           </svg>
         </div>
 
-        <div class="flex justify-between text-[8px] text-slate-400 font-mono mt-0.5">
+        <div class="flex justify-between text-[7.5px] text-slate-400 font-mono mt-0.5">
           <span>-40s</span>
           <span>-20s</span>
           <span>Now (0s)</span>

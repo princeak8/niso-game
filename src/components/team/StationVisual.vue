@@ -17,7 +17,7 @@ const isSolarNight = computed(() => {
 </script>
 
 <template>
-  <div class="relative w-full h-11 sm:h-12 md:h-14 rounded-lg overflow-hidden border border-black/20 shadow-inner mb-1.5">
+  <div class="relative w-full h-5 sm:h-6 rounded overflow-hidden border border-black/30 shadow-inner mb-0.5">
     
     <!-- 1. HYDRO POWER PLANT (KAINJI HYDROELECTRIC DAM) -->
     <div v-if="plantType === 'Hydro'" class="relative w-full h-full bg-gradient-to-b from-[#0284C7] via-[#0369A1] to-[#0C4A6E]">
@@ -116,12 +116,6 @@ const isSolarNight = computed(() => {
           <path d="M 40,44 Q 70,55 100,50" fill="none" stroke="#FCD34D" stroke-width="1.5" opacity="0.9" />
         </g>
       </svg>
-
-      <!-- Badge Overlay -->
-      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-[#389E5F]/60 text-white font-black text-[10px] tracking-wider uppercase">
-        <span class="w-2 h-2 rounded-full bg-[#4ADE80] animate-ping"></span>
-        <span>Hydro Dam & Penstocks</span>
-      </div>
     </div>
 
 
@@ -228,10 +222,10 @@ const isSolarNight = computed(() => {
         </g>
       </svg>
 
-      <!-- Badge Overlay -->
-      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-amber-500/60 text-white font-black text-[10px] tracking-wider uppercase">
-        <span class="w-2 h-2 rounded-full" :class="isTripped ? 'bg-rose-500 animate-ping' : 'bg-amber-400'"></span>
-        <span>{{ isTripped ? 'Emergency Trip (R3)' : 'Gas Boilers & Steam Stacks' }}</span>
+      <!-- Emergency Tripped Overlay Banner -->
+      <div v-if="isTripped" class="absolute inset-0 flex items-center justify-center bg-rose-950/80 backdrop-blur-xs text-white font-black text-[9px] tracking-wider uppercase border border-rose-500">
+        <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping mr-1"></span>
+        <span>🚨 TRIPPED OFFLINE (0 MW)</span>
       </div>
     </div>
 
@@ -309,12 +303,6 @@ const isSolarNight = computed(() => {
           <line x1="40" y1="30" x2="100" y2="25" stroke="#FCD34D" stroke-width="1.5" />
         </g>
       </svg>
-
-      <!-- Badge Overlay -->
-      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-amber-500/60 text-white font-black text-[10px] tracking-wider uppercase">
-        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-        <span>Gas Turbine & Combustion Chamber</span>
-      </div>
     </div>
 
 
@@ -428,10 +416,9 @@ const isSolarNight = computed(() => {
         </g>
       </svg>
 
-      <!-- Badge Overlay -->
-      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-md border border-yellow-400/60 text-white font-black text-[10px] tracking-wider uppercase">
-        <span class="w-2 h-2 rounded-full" :class="isSolarNight ? 'bg-slate-400' : 'bg-yellow-400 animate-ping'"></span>
-        <span>{{ isSolarNight ? 'Night / Solar Inactive (0 MW)' : 'Photovoltaic (PV) Panels · Kano' }}</span>
+      <!-- Night Indicator (Only shown if night/0MW) -->
+      <div v-if="isSolarNight" class="absolute top-0.5 right-1 flex items-center gap-1 bg-black/70 px-1.5 py-0.2 rounded text-amber-200 font-bold text-[8px] uppercase">
+        <span>🌙 Night (0MW)</span>
       </div>
     </div>
 
