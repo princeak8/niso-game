@@ -29,7 +29,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="min-h-screen flex flex-col font-sans transition-colors duration-200"
+    class="h-screen max-h-screen flex flex-col font-sans transition-colors duration-200 overflow-hidden"
     :class="[
       theme === 'light' ? 'theme-light bg-white text-slate-900' : 'theme-dark bg-[#0B1726] text-white'
     ]"
@@ -43,8 +43,8 @@ onMounted(() => {
       @open-solution-key="showSolutionKey = true"
     />
 
-    <!-- Main Dynamic Content Container (Full Width) -->
-    <main class="flex-1 w-full p-4 md:p-6 lg:px-8">
+    <!-- Main Dynamic Content Container (Full Viewport Fit) -->
+    <main class="flex-1 min-h-0 w-full px-2 py-1.5 md:px-3 md:py-2 overflow-y-auto lg:overflow-y-auto">
       
       <!-- Team Dispatcher Mode -->
       <TeamPlayView
@@ -69,14 +69,14 @@ onMounted(() => {
       @close="showSolutionKey = false"
     />
 
-    <!-- Footer -->
-    <footer class="bg-[#091B2E] border-t-2 border-[#1E3A5F] py-4 px-6 text-center text-xs text-slate-200">
-      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-        <div class="font-bold">
+    <!-- Compact Footer -->
+    <footer class="bg-[#091B2E] border-t border-[#1E3A5F] py-1 px-4 text-center text-[11px] text-slate-300 shrink-0">
+      <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-1">
+        <div class="font-semibold text-slate-300 truncate">
           NISO Staff Acculturation Programme · Exercise Guide 3: Keep the Lights On
         </div>
-        <div class="font-mono text-xs font-bold text-[#4ADE80] bg-[#143D24] px-3 py-1 rounded-full border border-[#389E5F]/50">
-          Target System Frequency: 50.00 Hz · 1 Token = 10 MW
+        <div class="font-mono text-[11px] font-bold text-[#4ADE80] bg-[#143D24] px-2.5 py-0.5 rounded-full border border-[#389E5F]/50 shrink-0">
+          Target Frequency: 50.00 Hz · 1 Token = 10 MW
         </div>
       </div>
     </footer>

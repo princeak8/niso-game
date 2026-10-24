@@ -59,50 +59,47 @@ const statusBadgeClass = computed(() => {
 </script>
 
 <template>
-  <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-2xl p-4 shadow-xl">
+  <div class="bg-[#0B1E33] border border-[#0D626C]/40 rounded-xl p-2 sm:p-2.5 shadow-lg">
     
     <!-- Header with Frequency & Controller View Toggle -->
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-700/60">
-      <div class="flex items-center gap-2">
-        <span class="w-3 h-3 rounded-full animate-ping" :class="{
+    <div class="flex flex-wrap items-center justify-between gap-1.5 mb-1.5 pb-1.5 border-b border-slate-700/60">
+      <div class="flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full animate-ping shrink-0" :class="{
           'bg-emerald-400': statusBand === 'normal',
           'bg-amber-400': statusBand === 'alert',
           'bg-rose-500': statusBand.startsWith('critical')
         }"></span>
-        <h2 class="text-xs md:text-sm font-extrabold uppercase tracking-wider text-slate-200">
-          Grid Frequency Simulation (50.00 Hz)
+        <h2 class="text-xs font-black uppercase tracking-wider text-slate-200">
+          Grid Frequency (50.00 Hz)
         </h2>
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded border" :class="statusBadgeClass">
-          {{ statusBand === 'normal' ? 'Normal Band (49.5–50.5 Hz)' : statusBand === 'alert' ? 'Alert Operating Band' : 'CRITICAL UFLS / TRIP' }}
+        <span class="text-[9px] font-bold px-1.5 py-0.2 rounded border" :class="statusBadgeClass">
+          {{ statusBand === 'normal' ? 'Normal (49.5–50.5)' : statusBand === 'alert' ? 'Alert Band' : 'CRITICAL TRIP' }}
         </span>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5">
         <button
           type="button"
           @click="emit('update:isControllerView', !isControllerView)"
           :class="[
-            'px-2.5 py-1 rounded-lg text-[11px] font-bold border transition flex items-center gap-1',
+            'px-2 py-0.5 rounded text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer',
             isControllerView
-              ? 'bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-900/40'
+              ? 'bg-cyan-600 text-white border-cyan-400 shadow-sm'
               : 'bg-slate-800 text-slate-300 hover:text-white border-slate-700'
           ]"
         >
           <span>🎧</span>
-          <span>Controller View {{ isControllerView ? 'ON' : 'OFF' }}</span>
+          <span>Voice {{ isControllerView ? 'ON' : 'OFF' }}</span>
         </button>
-        <span class="text-[10px] text-slate-400 italic hidden lg:inline">
-          Simplified Swing Equation Model
-        </span>
       </div>
     </div>
 
     <!-- Main Visuals Grid: Gauge + Rolling Line Chart -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
       
       <!-- Semi-Circular Radial Gauge -->
-      <div class="md:col-span-5 flex flex-col items-center justify-center p-2 bg-[#071626] rounded-xl border border-slate-800">
-        <div class="relative w-44 h-24 overflow-hidden flex items-end justify-center">
+      <div class="sm:col-span-5 flex flex-col items-center justify-center p-1.5 bg-[#071626] rounded-lg border border-slate-800">
+        <div class="relative w-32 h-16 overflow-hidden flex items-end justify-center">
           
           <!-- Gauge Arc Background SVG -->
           <svg viewBox="0 0 200 110" class="w-full h-full">
@@ -130,91 +127,74 @@ const statusBadgeClass = computed(() => {
 
           <!-- Dynamic SVG Needle -->
           <div
-            class="absolute bottom-0 w-1.5 h-20 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-lg shadow-rose-900/80"
+            class="absolute bottom-0 w-1 h-14 bg-rose-500 origin-bottom transition-transform duration-100 rounded-t-full shadow-md"
             :style="{ transform: `rotate(${needleAngle}deg)` }"
           ></div>
         </div>
 
         <!-- Frequency Digital Readout -->
-        <div class="mt-1 text-center">
-          <div class="text-3xl md:text-4xl font-black font-mono tracking-tight" :class="{
+        <div class="mt-0.5 text-center">
+          <div class="text-xl sm:text-2xl font-black font-mono tracking-tight leading-tight" :class="{
             'text-[#4ADE80]': statusBand === 'normal',
             'text-[#FBBF24]': statusBand === 'alert',
             'text-[#F87171]': statusBand.startsWith('critical')
           }">
-            {{ frequency.toFixed(2) }} <span class="text-base font-sans font-extrabold text-[#E2E8F0]">Hz</span>
+            {{ frequency.toFixed(2) }} <span class="text-xs font-sans font-extrabold text-slate-300">Hz</span>
           </div>
 
-          <div class="flex items-center justify-center gap-3 text-xs font-mono font-bold text-[#E2E8F0] mt-0.5">
-            <span>ROCOF: <b :class="rocof < 0 ? 'text-[#FCD34D]' : 'text-white'">{{ (rocof >= 0 ? '+' : '') + rocof.toFixed(2) }}</b> Hz/s</span>
+          <div class="flex items-center justify-center gap-2 text-[10px] font-mono font-bold text-slate-300">
+            <span>RoCoF: <b :class="rocof < 0 ? 'text-[#FCD34D]' : 'text-white'">{{ (rocof >= 0 ? '+' : '') + rocof.toFixed(2) }}</b></span>
             <span>·</span>
-            <span>Imbalance: <b :class="imbalanceMW < 0 ? 'text-[#FDA4AF]' : imbalanceMW > 0 ? 'text-[#7DD3FC]' : 'text-[#86EFAC]'">{{ (imbalanceMW >= 0 ? '+' : '') + imbalanceMW }}</b> MW</span>
+            <span>Δ: <b :class="imbalanceMW < 0 ? 'text-[#FDA4AF]' : imbalanceMW > 0 ? 'text-[#7DD3FC]' : 'text-[#86EFAC]'">{{ (imbalanceMW >= 0 ? '+' : '') + imbalanceMW }}MW</b></span>
           </div>
         </div>
       </div>
 
-      <!-- 60-Second Rolling Oscilloscope Chart -->
-      <div class="md:col-span-7 flex flex-col justify-between p-3 bg-[#091B2E] rounded-xl border border-slate-700 h-full min-h-[145px]">
-        <div class="flex items-center justify-between text-xs font-black text-[#E2E8F0] mb-1 px-1">
-          <span>Rolling 40s Frequency Oscilloscope</span>
-          <span class="font-mono text-[#4ADE80] font-black">Target: 50.00 Hz</span>
+      <!-- 40-Second Rolling Oscilloscope Chart -->
+      <div class="sm:col-span-7 flex flex-col justify-between p-2 bg-[#091B2E] rounded-lg border border-slate-700 min-h-[110px]">
+        <div class="flex items-center justify-between text-[10px] font-black text-slate-300 mb-0.5">
+          <span>Oscilloscope</span>
+          <span class="font-mono text-[#4ADE80]">Target: 50.00 Hz</span>
         </div>
 
-        <div class="relative w-full h-24 bg-slate-950 rounded-lg border border-slate-700 p-1 overflow-hidden">
-          
+        <div class="relative w-full h-16 bg-slate-950 rounded border border-slate-800 p-0.5 overflow-hidden">
           <!-- Grid Reference Lines -->
-          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-b-2 border-[#389E5F]/50 border-dashed"></div>
-          <div class="absolute inset-x-0 top-[20%] border-b border-amber-400/30 text-[10px] text-amber-300 pl-1 font-mono font-bold">50.5 Hz</div>
-          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-400/30 text-[10px] text-amber-300 pl-1 font-mono font-bold">49.5 Hz</div>
+          <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 border-b border-[#389E5F]/50 border-dashed"></div>
+          <div class="absolute inset-x-0 top-[20%] border-b border-amber-400/20 text-[8px] text-amber-300/80 pl-0.5 font-mono">50.5</div>
+          <div class="absolute inset-x-0 bottom-[20%] border-b border-amber-400/20 text-[8px] text-amber-300/80 pl-0.5 font-mono">49.5</div>
 
           <!-- Dynamic SVG Waveform -->
           <svg viewBox="0 0 360 90" class="w-full h-full overflow-visible" preserveAspectRatio="none">
-            <defs>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="2.5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
             <polyline
               v-if="chartPoints"
               fill="none"
               stroke="#389E5F"
-              stroke-width="3"
+              stroke-width="2.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              filter="url(#glow)"
               :points="chartPoints"
             />
           </svg>
         </div>
 
-        <div class="flex justify-between text-[10px] text-slate-400 font-mono mt-1 px-1">
+        <div class="flex justify-between text-[8px] text-slate-400 font-mono mt-0.5">
           <span>-40s</span>
           <span>-20s</span>
-          <span>Live Now (0s)</span>
+          <span>Now (0s)</span>
         </div>
       </div>
 
     </div>
 
-    <!-- Real-Time NCC Osogbo Controller Annotation Banner -->
+    <!-- Controller Annotation Banner -->
     <div
       v-if="isControllerView"
-      class="mt-3 p-3 rounded-xl bg-cyan-950/60 border border-cyan-500/40 text-cyan-200 text-xs flex items-start gap-2.5 animate-fadeIn"
+      class="mt-1.5 p-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-200 text-[10px] flex items-center gap-1.5"
     >
-      <span class="text-lg">🎙️</span>
-      <div class="flex-1">
-        <div class="font-bold uppercase tracking-wider text-[11px] text-cyan-300">
-          NCC Osogbo Dispatch Console Voice Log:
-        </div>
-        <p class="font-mono text-xs text-cyan-100 mt-0.5 leading-relaxed">
-          {{ controllerMessage }}
-        </p>
-      </div>
+      <span class="text-sm">🎙️</span>
+      <p class="font-mono text-cyan-100 truncate flex-1">
+        {{ controllerMessage }}
+      </p>
     </div>
 
   </div>

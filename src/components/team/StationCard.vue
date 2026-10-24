@@ -116,7 +116,7 @@ function handleDrop(e: DragEvent) {
 
 <template>
   <div
-    class="relative rounded-2xl border p-4 transition-all duration-200 shadow-xl flex flex-col justify-between station-card overflow-hidden"
+    class="relative rounded-xl border p-2 sm:p-2.5 transition-all duration-200 shadow-lg flex flex-col justify-between station-card overflow-hidden text-xs"
     :class="[
       theme.cardClass,
       theme.border,
@@ -126,13 +126,12 @@ function handleDrop(e: DragEvent) {
     @dragover="handleDragOver"
     @drop="handleDrop"
   >
-    <!-- Top Accent Color Strip for Instant Plant Identification -->
-    <div class="absolute top-0 left-0 right-0 h-1.5" :class="theme.accentBar"></div>
+    <!-- Top Accent Color Strip -->
+    <div class="absolute top-0 left-0 right-0 h-1" :class="theme.accentBar"></div>
     
     <div>
-      <!-- High-Detail Visual Plant Illustration -->
+      <!-- High-Detail Visual Plant Illustration (Compact Vector) -->
       <StationVisual
-        v-if="!compact"
         :id="id"
         :plant-type="plantType"
         :current-m-w="currentMW"
@@ -141,101 +140,90 @@ function handleDrop(e: DragEvent) {
         :is-tripped="id === 'egbin' && roundId === 3"
       />
 
-      <!-- Top Header & Edge Position -->
-      <div class="flex items-start justify-between gap-2 mb-2">
-        <div>
+      <!-- Header: Plant Identity & Capacity Badge -->
+      <div class="flex items-start justify-between gap-1 mb-1">
+        <div class="min-w-0">
           <div class="flex items-center gap-1.5">
-            <PlantIcon :kind="iconKind" :size="compact ? 48 : 36" :active="currentMW > 0" />
-            <h3 class="font-black text-base md:text-lg text-white uppercase tracking-tight">
+            <PlantIcon :kind="iconKind" :size="20" :active="currentMW > 0" class="shrink-0" />
+            <h3 class="font-black text-xs sm:text-sm text-white uppercase tracking-tight truncate">
               {{ name }}
             </h3>
           </div>
-          <div class="text-xs font-black text-[#86EFAC] tracking-wide mt-0.5">
+          <div class="text-[10px] font-bold text-[#86EFAC] truncate">
             {{ realName }}
           </div>
-          <div class="text-[11px] font-bold text-[#CBD5E1]">
-            {{ location }}
-          </div>
-          <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider mt-0.5">
-            📍 {{ theme.cardinal }}
+          <div class="text-[9px] text-slate-300 font-mono truncate">
+            {{ location }} · 📍 {{ theme.cardinal.split('·')[0] }}
           </div>
         </div>
 
-        <span class="text-xs font-black px-2.5 py-1 rounded-md border uppercase shadow-sm" :class="theme.badgeBg">
-          {{ typeLabel }} · {{ maxCapacityMW }} MW
+        <span class="text-[9px] font-black px-1.5 py-0.5 rounded border uppercase shrink-0 shadow-sm" :class="theme.badgeBg">
+          {{ typeLabel }} · {{ maxCapacityMW }}MW
         </span>
       </div>
 
-      <!-- Live Dispatch Readout -->
-      <div class="flex items-center justify-between bg-[#091B2E] rounded-xl p-3 my-2 border border-slate-700 shadow-inner">
+      <!-- Live Dispatch Readout (Compact Inline Bar) -->
+      <div class="flex items-center justify-between bg-[#091B2E] rounded-lg px-2 py-1 my-1 border border-slate-700/80 shadow-inner">
         <div>
-          <div class="text-[11px] uppercase font-black text-[#CBD5E1]">Current Generation</div>
-          <div class="text-2xl font-black font-mono text-white mt-0.5">
-            {{ currentMW }} <span class="text-sm font-sans font-bold text-[#CBD5E1]">MW</span>
-          </div>
+          <span class="text-[9px] uppercase font-bold text-slate-300 block leading-none">Output</span>
+          <span class="text-sm sm:text-base font-black font-mono text-white leading-tight">
+            {{ currentMW }} <span class="text-[10px] font-sans font-bold text-slate-300">MW</span>
+          </span>
         </div>
         <div class="text-right">
-          <div class="text-[11px] uppercase font-black text-[#CBD5E1]">Tokens on Board</div>
-          <div class="text-xl font-black font-mono text-[#86EFAC] mt-0.5">
+          <span class="text-[9px] uppercase font-bold text-slate-300 block leading-none">Tokens</span>
+          <span class="text-xs sm:text-sm font-black font-mono text-[#86EFAC] leading-tight">
             {{ currentTokens }} / {{ maxCapacity }}
-          </div>
+          </span>
         </div>
       </div>
 
       <!-- Ramp Limits & Constraints Info Box -->
-      <div class="mb-3 text-[11px] space-y-1">
-        
+      <div class="mb-1 text-[9px] space-y-0.5">
         <!-- Gas Station Ramp Rule -->
-        <div v-if="plantType === 'Gas'" class="flex items-center justify-between p-1.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <span class="text-slate-400 font-medium">Max Ramp: ±3 tokens</span>
+        <div v-if="plantType === 'Gas'" class="flex items-center justify-between px-1.5 py-0.5 rounded bg-slate-900/80 border border-slate-800">
+          <span class="text-slate-300">Ramp: ±3 tokens</span>
           <span
             class="font-mono font-bold"
             :class="isRampViolated ? 'text-rose-400 animate-pulse' : 'text-slate-200'"
           >
-            Change: {{ (rampChange >= 0 ? '+' : '') + rampChange }} tokens
+            Δ: {{ (rampChange >= 0 ? '+' : '') + rampChange }} tok
           </span>
         </div>
 
         <!-- Kainji Reserve Indicator -->
-        <div v-if="id === 'kainji'" class="p-1.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
-          <span class="text-slate-400 font-medium">Reserve Target:</span>
+        <div v-if="id === 'kainji'" class="px-1.5 py-0.5 rounded bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+          <span class="text-slate-300">Reserve:</span>
           <span
-            class="font-bold text-[10px] px-1.5 py-0.5 rounded"
+            class="font-bold text-[9px] px-1 rounded"
             :class="roundId === 6 ? (currentTokens <= 2 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300') : (currentTokens <= 6 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300')"
           >
-            {{ roundId === 6 ? 'Max 2 tokens for bonus' : 'Keep ≥2 free slots (≤6)' }}
+            {{ roundId === 6 ? 'Max 2 tokens' : 'Keep ≥2 slots (≤6)' }}
           </span>
         </div>
 
         <!-- Kano Solar Dispatcher Note -->
-        <div v-if="id === 'kano'" class="text-[10px] text-amber-300/80 italic p-1 bg-amber-950/20 rounded border border-amber-500/20">
-          Output determined by natural solar irradiance (facilitator script).
+        <div v-if="id === 'kano'" class="text-[9px] text-amber-300/90 italic px-1.5 py-0.5 bg-amber-950/20 rounded border border-amber-500/20 truncate">
+          Solar irradiance curve output.
         </div>
 
         <!-- Ramp Violation Warning -->
-        <div v-if="isRampViolated" class="p-1 text-[11px] font-bold text-rose-300 bg-rose-950/50 rounded border border-rose-500/40 text-center">
-          ⚠️ RAMP RULE VIOLATION (Round Score = 0)
+        <div v-if="isRampViolated" class="p-0.5 text-[9px] font-bold text-rose-300 bg-rose-950/60 rounded border border-rose-500/40 text-center">
+          ⚠️ RAMP VIOLATION (0 pts)
         </div>
       </div>
     </div>
 
     <!-- Visual Token Rack (Slots) -->
-    <div class="my-2">
-      <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex justify-between">
-        <span>Capacity Slots (1 token = 10 MW)</span>
-        <span v-if="maxAllowedInRound < maxCapacity" class="text-amber-400 font-semibold">
-          Constraint: Max {{ maxAllowedInRound }}
-        </span>
-      </div>
-
-      <div class="grid grid-cols-6 gap-1.5 p-2 bg-slate-950/80 rounded-xl border border-slate-800/90">
+    <div class="my-1">
+      <div class="grid grid-cols-6 gap-1 p-1 bg-slate-950/80 rounded-lg border border-slate-800/90">
         <div
           v-for="slotIndex in maxCapacity"
           :key="slotIndex"
-          class="aspect-square rounded-lg flex items-center justify-center font-mono font-bold text-xs transition-all relative"
+          class="h-4 sm:h-5 rounded flex items-center justify-center font-mono font-bold text-[9px] transition-all relative"
           :class="[
             slotIndex <= currentTokens
-              ? `${theme.tokenColor} shadow-md scale-95`
+              ? `${theme.tokenColor} shadow-sm scale-95`
               : slotIndex > maxAllowedInRound
               ? 'bg-rose-950/40 border border-rose-800/40 text-rose-400 opacity-60'
               : (id === 'kainji' && slotIndex > (roundId === 6 ? 2 : 6))
@@ -243,29 +231,26 @@ function handleDrop(e: DragEvent) {
               : 'bg-slate-900 border border-slate-800 text-slate-600'
           ]"
         >
-          <!-- Active Token Icon -->
           <span v-if="slotIndex <= currentTokens">●</span>
-          <!-- Blocked by Event / Outage -->
-          <span v-else-if="slotIndex > maxAllowedInRound" class="text-[9px]">✕</span>
-          <!-- Reserve Space Notch on Kainji -->
-          <span v-else-if="id === 'kainji' && slotIndex > (roundId === 6 ? 2 : 6)" class="text-[8px] font-sans font-bold">R</span>
-          <span v-else class="text-[9px] opacity-40">{{ slotIndex }}</span>
+          <span v-else-if="slotIndex > maxAllowedInRound">✕</span>
+          <span v-else-if="id === 'kainji' && slotIndex > (roundId === 6 ? 2 : 6)" class="text-[7px]">R</span>
+          <span v-else class="opacity-40">{{ slotIndex }}</span>
         </div>
       </div>
     </div>
 
     <!-- Interactive Touch +/- Controls -->
-    <div v-if="isControlledByTeam" class="mt-3 pt-2.5 border-t border-slate-700">
-      <div class="grid grid-cols-2 gap-2">
+    <div v-if="isControlledByTeam" class="mt-1 pt-1 border-t border-slate-700/60">
+      <div class="grid grid-cols-2 gap-1.5">
         <!-- Decrement Button -->
         <button
           type="button"
           @click="emit('adjust', -1)"
           :disabled="isLocked || currentTokens <= 0"
-          class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-900 disabled:opacity-30 disabled:pointer-events-none text-white font-black text-base border-2 border-slate-600 shadow-md flex items-center justify-center gap-1.5 transition active:scale-95"
+          class="py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 active:bg-slate-900 disabled:opacity-30 disabled:pointer-events-none text-white font-black text-xs border border-slate-600 shadow flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer"
         >
-          <span class="text-xl">−</span>
-          <span class="text-xs font-mono font-black">10 MW</span>
+          <span class="text-sm leading-none">−</span>
+          <span class="text-[10px] font-mono font-bold">10MW</span>
         </button>
 
         <!-- Increment Button -->
@@ -273,18 +258,18 @@ function handleDrop(e: DragEvent) {
           type="button"
           @click="emit('adjust', +1)"
           :disabled="isLocked || currentTokens >= maxAllowedInRound || storeTokensAvailable <= 0"
-          class="py-3 px-3 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] active:bg-[#1E5C35] disabled:opacity-30 disabled:pointer-events-none text-white font-black text-base border-2 border-[#52BF7B] shadow-lg shadow-green-950/60 flex items-center justify-center gap-1.5 transition active:scale-95"
+          class="py-1 px-1.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] active:bg-[#1E5C35] disabled:opacity-30 disabled:pointer-events-none text-white font-black text-xs border border-[#52BF7B] shadow flex items-center justify-center gap-1 transition active:scale-95 cursor-pointer"
         >
-          <span class="text-xl">+</span>
-          <span class="text-xs font-mono font-black">10 MW</span>
+          <span class="text-sm leading-none">+</span>
+          <span class="text-[10px] font-mono font-bold">10MW</span>
         </button>
       </div>
     </div>
 
     <!-- Controlled by Facilitator Notice (Solar) -->
-    <div v-else class="mt-3 pt-2 border-t border-slate-800 text-center">
-      <span class="text-[11px] font-semibold text-slate-400">
-        Dispatched automatically by round script
+    <div v-else class="mt-1 pt-0.5 border-t border-slate-800 text-center">
+      <span class="text-[9px] font-semibold text-slate-400">
+        Dispatched by script
       </span>
     </div>
 

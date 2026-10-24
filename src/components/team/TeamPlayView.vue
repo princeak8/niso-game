@@ -77,87 +77,65 @@ function handleDragStart(e: DragEvent) {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-1.5">
 
-    <!-- Top Row: Compressed Team Identity (Left) + Practice Walkthrough Guide (Right, on same level) -->
-    <div class="w-full flex flex-col md:flex-row gap-3 items-stretch">
+    <!-- Top Row: Compact Team Identity & Practice Walkthrough Hint -->
+    <div class="w-full flex flex-wrap items-center justify-between gap-1.5 px-2 py-1 bg-[#0F243A] border border-[#1E3A5F] rounded-xl shadow-md text-xs">
       
-      <!-- Compressed Team Identity & Local Device Status (Left Column: 5/12 width) -->
-      <div
-        class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-3 shadow-lg flex flex-col justify-between gap-2.5 transition-all"
-        :class="game.currentRound.value.isPractice ? 'w-full md:w-5/12' : 'w-full'"
-      >
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-[#143D24] border-2 border-[#389E5F]/60 flex items-center justify-center text-base shadow-md text-[#4ADE80] shrink-0">
-            👥
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="text-[10px] font-bold uppercase text-slate-300">Team:</span>
-              <select
-                :value="game.activeTeamId.value"
-                @change="e => game.switchActiveTeam((e.target as HTMLSelectElement).value)"
-                class="bg-[#0B1726] border-2 border-[#389E5F] text-[#86EFAC] font-black text-xs rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-[#389E5F] shadow-inner"
-              >
-                <option v-for="t in game.teams.value" :key="t.id" :value="t.id">
-                  {{ t.name }}
-                </option>
-              </select>
-              <button
-                type="button"
-                @click="openEditTeam"
-                class="text-[11px] text-[#4ADE80] hover:text-[#86EFAC] underline font-bold transition"
-              >
-                ✎ Edit
-              </button>
-            </div>
-            <div class="text-[10px] text-slate-300 font-mono font-semibold mt-0.5 flex flex-wrap items-center gap-2">
-              <span>Disp: <strong class="text-white font-black">{{ game.activeTeam.value.dispatcherName || 'Unassigned' }}</strong></span>
-              <span class="text-slate-500">·</span>
-              <span>Check: <strong class="text-white font-black">{{ game.activeTeam.value.checkerName || 'Unassigned' }}</strong></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between pt-1.5 border-t border-[#1E3A5F]">
-          <span class="text-[10px] text-slate-300 font-medium italic">
-            Auto-saved locally
-          </span>
-
+      <!-- Team Identity & Roles -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1">
+          <span class="text-xs">👥</span>
+          <span class="text-[10px] font-bold uppercase text-slate-300">Team:</span>
+          <select
+            :value="game.activeTeamId.value"
+            @change="e => game.switchActiveTeam((e.target as HTMLSelectElement).value)"
+            class="bg-[#0B1726] border border-[#389E5F] text-[#86EFAC] font-black text-xs rounded px-1.5 py-0.5 shadow-inner cursor-pointer"
+          >
+            <option v-for="t in game.teams.value" :key="t.id" :value="t.id">
+              {{ t.name }}
+            </option>
+          </select>
           <button
             type="button"
-            @click="handleCopyScorecard"
-            class="px-2.5 py-1 rounded-xl bg-[#132E4C] hover:bg-[#1E3A5F] text-white border-2 border-[#389E5F]/60 text-xs font-black flex items-center gap-1.5 shadow-md transition active:scale-95"
-            title="Copy text scorecard to share with Inspector or WhatsApp"
+            @click="openEditTeam"
+            class="text-[10px] text-[#4ADE80] hover:text-[#86EFAC] underline font-bold cursor-pointer"
           >
-            <span>📋</span>
-            <span>{{ copiedToast ? 'Copied!' : 'Copy Scorecard' }}</span>
+            ✎ Edit
           </button>
+        </div>
+
+        <div class="text-[10px] text-slate-300 font-mono hidden md:flex items-center gap-1.5">
+          <span>Disp: <strong class="text-white">{{ game.activeTeam.value.dispatcherName || 'Unassigned' }}</strong></span>
+          <span class="text-slate-500">·</span>
+          <span>Check: <strong class="text-white">{{ game.activeTeam.value.checkerName || 'Unassigned' }}</strong></span>
         </div>
       </div>
 
-      <!-- Practice Round Guidance Walkthrough Card (Right Column: 7/12 width, exact same level) -->
-      <div
-        v-if="game.currentRound.value.isPractice"
-        class="w-full md:w-7/12 p-3 rounded-2xl bg-[#143D24] border-2 border-[#389E5F] text-white flex items-start gap-2.5 shadow-xl"
-      >
-        <span class="text-xl shrink-0">💡</span>
-        <div class="flex-1 text-xs leading-relaxed">
-          <strong class="text-xs font-black text-white uppercase tracking-wide block mb-0.5">
-            Practice Round Walkthrough & Dispatch Hints:
-          </strong>
-          <p class="text-white font-medium text-[11px] leading-snug">
-            At 5:00 AM, system demand is 160 MW. Grid starts in exact balance with:
-            <strong class="text-[#86EFAC]">Kainji Hydro (40 MW)</strong>, <strong class="text-amber-300">Egbin Gas (60 MW)</strong>, and <strong class="text-amber-300">Geregu Gas (60 MW)</strong>.
-            Kano Solar is 0 MW before dawn (Total = 160 MW).
-            Tap (+) and (−) on the stations below to observe how the frequency gauge responds!
-          </p>
+      <!-- Practice Round Hint or Scorecard Export -->
+      <div class="flex items-center gap-2">
+        <div
+          v-if="game.currentRound.value.isPractice"
+          class="hidden lg:flex items-center gap-1 text-[11px] text-[#86EFAC] bg-[#143D24] px-2 py-0.5 rounded border border-[#389E5F]/50"
+        >
+          <span>💡</span>
+          <span>Practice: Kainji (40MW) + Egbin (60MW) + Geregu (60MW) = 160MW. Tap +/− to test!</span>
         </div>
+
+        <button
+          type="button"
+          @click="handleCopyScorecard"
+          class="px-2 py-0.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-white border border-[#389E5F]/60 text-[10px] font-bold flex items-center gap-1 transition active:scale-95 cursor-pointer"
+          title="Copy text scorecard"
+        >
+          <span>📋</span>
+          <span>{{ copiedToast ? 'Copied!' : 'Copy Scorecard' }}</span>
+        </button>
       </div>
 
     </div>
 
-    <!-- Live Round Banner with Countdown Timer & Telemetry -->
+    <!-- Live Round Banner with Countdown Timer & Telemetry HUD -->
     <RoundBanner
       :round="game.currentRound.value"
       :timer-seconds="game.timerSeconds.value"
@@ -178,51 +156,56 @@ function handleDragStart(e: DragEvent) {
       @unlock-round="game.unlockRound"
     />
 
+    <!-- Inline Round Score Summary (Shown when submitted or locked) -->
+    <RoundScoreSummary
+      v-if="game.isSubmitted.value || (game.isLocked.value && game.timerSeconds.value === 0)"
+      :score="game.currentScoreBreakdown.value"
+      :is-practice="game.currentRound.value.isPractice"
+      :has-next-round="game.currentRoundIndex.value < game.ROUNDS.length - 1"
+      @advance="game.advanceNextRound"
+    />
+
     <!-- National Grid Dispatch Ring Container (Circular Perimeter & Center Hub) -->
-    <div class="relative w-full rounded-3xl p-4 md:p-6 bg-[#0F243A] border-2 border-[#1E3A5F] shadow-2xl overflow-hidden">
+    <div class="relative w-full rounded-2xl p-2 sm:p-2.5 bg-[#0F243A] border border-[#1E3A5F] shadow-xl overflow-hidden">
       
       <!-- Perimeter Title Bar -->
-      <div class="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b-2 border-[#1E3A5F]">
-        <div class="flex items-center gap-2.5">
-          <span class="w-3.5 h-3.5 rounded-full bg-[#389E5F] animate-ping"></span>
-          <div>
-            <h3 class="text-sm md:text-base font-black uppercase tracking-wider text-white">
-              National Grid Dispatch Ring · Scattered Regional Perimeter
-            </h3>
-            <p class="text-xs text-slate-300 font-medium">
-              4 Regional Stations Positioned at Outer Circular Edges · Feeding NCC Osogbo Central Hub
-            </p>
-          </div>
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-1.5 mb-1.5 pb-1 border-b border-[#1E3A5F]">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#389E5F] animate-ping"></span>
+          <h3 class="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
+            National Grid Dispatch Ring
+          </h3>
+          <span class="text-[10px] text-slate-300 hidden md:inline">
+            · 4 Regional Stations feeding NCC Osogbo Central Hub
+          </span>
         </div>
 
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-[#4ADE80] font-mono font-bold bg-[#143D24] px-3 py-1 rounded-lg border border-[#389E5F]/50 shadow-sm">
-            Total Board Gen: {{ game.totalGenerationMW.value }} MW
+        <div class="flex items-center gap-1.5">
+          <span class="text-[10px] text-[#4ADE80] font-mono font-bold bg-[#143D24] px-2 py-0.5 rounded border border-[#389E5F]/50">
+            Total Gen: {{ game.totalGenerationMW.value }} MW
           </span>
-          <span class="text-xs text-amber-300 font-mono font-bold bg-amber-950/60 px-3 py-1 rounded-lg border border-amber-500/40 shadow-sm hidden sm:inline">
+          <span class="text-[10px] text-amber-300 font-mono font-bold bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40 hidden sm:inline">
             Gas Ramp: ±30 MW max
           </span>
         </div>
       </div>
 
       <!-- 3-COLUMN PERIMETER DISPATCH RING: West Stations | NCC Central Hub | East Stations -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 md:gap-2.5 items-stretch relative z-10">
 
         <!-- ========================================================
              WEST REGIONAL PERIMETER (Left Column: lg:col-span-4)
-             Stacks Kainji (NW) and Egbin (SW) in normal document flow.
-             They CANNOT overlap because they are in standard column flow with gap-8!
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-8">
+        <div class="lg:col-span-4 flex flex-col gap-1.5">
           
-          <!-- Station 1: Kainji Hydro (North-West Circular Edge) -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs font-black px-2 text-[#38BDF8]">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-[#38BDF8]"></span>
+          <!-- Station 1: Kainji Hydro -->
+          <div>
+            <div class="flex items-center justify-between text-[10px] font-black px-1 pb-0.5 text-[#38BDF8]">
+              <span class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#38BDF8]"></span>
                 📍 North-West Circular Edge
               </span>
-              <span class="bg-[#0284C7]/20 border border-[#38BDF8]/40 text-[#7DD3FC] px-2 py-0.5 rounded-md text-[10px] font-mono">
+              <span class="bg-[#0284C7]/20 border border-[#38BDF8]/40 text-[#7DD3FC] px-1 rounded text-[9px] font-mono">
                 330kV Line → Hub
               </span>
             </div>
@@ -231,7 +214,7 @@ function handleDragStart(e: DragEvent) {
               id="kainji"
               name="Hydro Plant"
               real-name="Kainji Hydroelectric"
-              location="Niger River · Niger State"
+              location="Niger River · Niger"
               plant-type="Hydro"
               :max-capacity="8"
               :current-tokens="game.kainjiTokens.value"
@@ -246,18 +229,18 @@ function handleDragStart(e: DragEvent) {
           </div>
 
           <!-- Decorative Transmission Corridor Flow Divider -->
-          <div class="hidden lg:flex items-center justify-center gap-3 px-4 py-1.5 text-slate-400 text-[10px] font-mono uppercase tracking-widest border-y border-dashed border-[#1E3A5F] bg-[#091B2E]/60 rounded-lg">
-            <span class="font-extrabold text-lg">↕ Western 330kV Grid Transmission Corridor</span>
+          <div class="hidden lg:flex items-center justify-center py-0.5 text-slate-400 text-[9px] font-mono uppercase tracking-widest border-y border-dashed border-[#1E3A5F]/60">
+            ↕ Western 330kV Transmission Corridor
           </div>
 
-          <!-- Station 2: Egbin Gas Station A (South-West Circular Edge) -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs font-black px-2 text-amber-400">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <!-- Station 2: Egbin Gas Station A -->
+          <div>
+            <div class="flex items-center justify-between text-[10px] font-black px-1 pb-0.5 text-amber-400">
+              <span class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                 📍 South-West Circular Edge
               </span>
-              <span class="bg-amber-500/20 border border-amber-400/40 text-amber-300 px-2 py-0.5 rounded-md text-[10px] font-mono">
+              <span class="bg-amber-500/20 border border-amber-400/40 text-amber-300 px-1 rounded text-[9px] font-mono">
                 330kV Line → Hub
               </span>
             </div>
@@ -266,7 +249,7 @@ function handleDragStart(e: DragEvent) {
               id="egbin"
               name="Gas Station A"
               real-name="Egbin Thermal Power"
-              location="Ikorodu · Lagos State"
+              location="Ikorodu · Lagos"
               plant-type="Gas"
               :max-capacity="12"
               :current-tokens="game.egbinTokens.value"
@@ -289,17 +272,12 @@ function handleDragStart(e: DragEvent) {
              CENTRAL DISPATCH HUB (Center Column: lg:col-span-4)
              Frequency Dashboard + Token Depot + Load Shedding
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-6">
+        <div class="lg:col-span-4 flex flex-col gap-1.5 justify-between">
 
           <!-- Central Hub Header Badge -->
-          <div class="w-full text-center py-2.5 px-4 rounded-2xl bg-[#143D24] border-2 border-[#389E5F] shadow-xl">
-            <div class="text-xs md:text-sm font-black uppercase tracking-wider text-[#86EFAC] flex items-center justify-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-[#4ADE80] animate-ping"></span>
-              🎯 Central Grid Controller · NCC Osogbo
-            </div>
-            <p class="text-[11px] text-slate-200 font-semibold mt-0.5">
-              Live National Dispatch & Frequency Balancing (50.00 Hz)
-            </p>
+          <div class="w-full text-center py-1 px-2 rounded-lg bg-[#143D24] border border-[#389E5F] shadow flex items-center justify-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#4ADE80] animate-ping"></span>
+            <span class="text-xs font-black uppercase text-[#86EFAC]">Central Grid Controller · NCC Osogbo</span>
           </div>
 
           <!-- Central Frequency Dashboard -->
@@ -314,8 +292,8 @@ function handleDragStart(e: DragEvent) {
             @update:is-controller-view="val => frequencyEngine.isControllerView.value = val"
           />
 
-          <!-- Central Token Depot & Load Shed Tray -->
-          <div class="space-y-4">
+          <!-- Central Token Depot & Load Shed Tray (Side-by-side on wide) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             <TokenDepot
               :store-tokens="game.storeTokens.value"
               :total-tokens="40"
@@ -334,19 +312,17 @@ function handleDragStart(e: DragEvent) {
 
         <!-- ========================================================
              EAST REGIONAL PERIMETER (Right Column: lg:col-span-4)
-             Stacks Kano (NE) and Geregu (SE) in normal document flow.
-             They CANNOT overlap because they are in standard column flow with gap-8!
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-8">
+        <div class="lg:col-span-4 flex flex-col gap-1.5">
 
-          <!-- Station 3: Kano Solar (North-East Circular Edge) -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs font-black px-2 text-yellow-300">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+          <!-- Station 3: Kano Solar -->
+          <div>
+            <div class="flex items-center justify-between text-[10px] font-black px-1 pb-0.5 text-yellow-300">
+              <span class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
                 📍 North-East Circular Edge
               </span>
-              <span class="bg-yellow-500/20 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded-md text-[10px] font-mono">
+              <span class="bg-yellow-500/20 border border-yellow-400/40 text-yellow-300 px-1 rounded text-[9px] font-mono">
                 330kV Line → Hub
               </span>
             </div>
@@ -355,7 +331,7 @@ function handleDragStart(e: DragEvent) {
               id="kano"
               name="Solar Power Plant"
               real-name="Kano Solar Farm"
-              location="Kumbotso · Kano State"
+              location="Kumbotso · Kano"
               plant-type="Solar"
               :max-capacity="6"
               :current-tokens="game.kanoTokens.value"
@@ -369,18 +345,18 @@ function handleDragStart(e: DragEvent) {
           </div>
 
           <!-- Decorative Transmission Corridor Flow Divider -->
-          <div class="hidden lg:flex items-center justify-center gap-3 px-4 py-1.5 text-slate-400 text-[10px] font-mono uppercase tracking-widest border-y border-dashed border-[#1E3A5F] bg-[#091B2E]/60 rounded-lg">
-            <span>↕ Eastern 330kV Grid Transmission Corridor</span>
+          <div class="hidden lg:flex items-center justify-center py-0.5 text-slate-400 text-[9px] font-mono uppercase tracking-widest border-y border-dashed border-[#1E3A5F]/60">
+            ↕ Eastern 330kV Transmission Corridor
           </div>
 
-          <!-- Station 4: Geregu Gas Turbine (South-East Circular Edge) -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between text-xs font-black px-2 text-amber-400">
-              <span class="flex items-center gap-1.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <!-- Station 4: Geregu Gas Turbine -->
+          <div>
+            <div class="flex items-center justify-between text-[10px] font-black px-1 pb-0.5 text-amber-400">
+              <span class="flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
                 📍 South-East Circular Edge
               </span>
-              <span class="bg-amber-500/20 border border-amber-400/40 text-amber-300 px-2 py-0.5 rounded-md text-[10px] font-mono">
+              <span class="bg-amber-500/20 border border-amber-400/40 text-amber-300 px-1 rounded text-[9px] font-mono">
                 330kV Line → Hub
               </span>
             </div>
@@ -389,7 +365,7 @@ function handleDragStart(e: DragEvent) {
               id="geregu"
               name="Gas Station B"
               real-name="Geregu Power Plant"
-              location="Ajaokuta · Kogi State"
+              location="Ajaokuta · Kogi"
               plant-type="Gas"
               :max-capacity="12"
               :current-tokens="game.gereguTokens.value"
@@ -410,24 +386,15 @@ function handleDragStart(e: DragEvent) {
 
       </div>
 
-      <!-- Legend Footer Bar -->
-      <div class="mt-8 pt-4 border-t-2 border-[#1E3A5F] flex flex-wrap items-center justify-center gap-6 text-xs text-slate-300 font-bold">
-        <span v-for="k in legend" :key="k.kind" class="flex items-center gap-2">
-          <PlantIcon :kind="k.kind" :size="24" :active="false" />
+      <!-- Legend Footer Bar (Compact inline) -->
+      <div class="mt-2 pt-1 border-t border-[#1E3A5F] flex flex-wrap items-center justify-center gap-4 text-[10px] text-slate-400 font-bold">
+        <span v-for="k in legend" :key="k.kind" class="flex items-center gap-1.5">
+          <PlantIcon :kind="k.kind" :size="16" :active="false" />
           <span>{{ k.label }}</span>
         </span>
       </div>
 
     </div>
-
-    <!-- Round Score Summary (Shown when submitted or locked) -->
-    <RoundScoreSummary
-      v-if="game.isSubmitted.value || (game.isLocked.value && game.timerSeconds.value === 0)"
-      :score="game.currentScoreBreakdown.value"
-      :is-practice="game.currentRound.value.isPractice"
-      :has-next-round="game.currentRoundIndex.value < game.ROUNDS.length - 1"
-      @advance="game.advanceNextRound"
-    />
 
     <!-- Dramatic Event Popup Modal -->
     <EventPopup
