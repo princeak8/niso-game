@@ -91,29 +91,34 @@ const { currentRoundIndex, roundScores, initializeRound } = game;
           </button>
         </div>
 
-        <!-- Compact Round Progression Breadcrumbs (Inline with tabs) -->
+        <!-- Horizontal Round Progression Pills (Matching Facilitator Style) -->
         <div
           v-if="activeTab === 'team'"
-          class="hidden sm:flex items-center gap-1 p-0.5 bg-[#091B2E] rounded-lg border border-slate-700 shadow-inner"
+          class="flex items-center gap-1.5 overflow-x-auto py-0.5 max-w-full"
         >
           <button
             v-for="(r, idx) in ROUNDS"
             :key="r.id"
             type="button"
             @click="initializeRound(idx)"
-            class="py-0.5 px-2 rounded border text-center transition flex items-center gap-1 cursor-pointer whitespace-nowrap text-[10px]"
+            class="py-1 px-2.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm"
             :class="[
               currentRoundIndex === idx
-                ? 'bg-[#389E5F] text-white border-[#BBF7D0] font-black shadow-sm'
+                ? 'bg-[#389E5F] text-white border-[#BBF7D0] font-black shadow-md shadow-[#389E5F]/30'
                 : roundScores[r.id]
                 ? 'bg-[#132E4C] text-[#86EFAC] border-[#389E5F]/60 font-bold hover:bg-[#1E3A5F]'
-                : 'bg-[#0B1726] text-slate-300 border-slate-700 font-medium hover:text-white'
+                : 'bg-[#0F243A] text-slate-300 border-[#1E3A5F] hover:text-white hover:border-slate-500'
             ]"
             :title="`${r.name} (${r.demandMW} MW)`"
           >
-            <span class="font-bold">{{ r.isPractice ? 'P' : `R${r.id}` }}</span>
-            <span class="font-mono opacity-80">{{ r.timeOfDay }}</span>
-            <span v-if="roundScores[r.id]" class="text-[#4ADE80] font-black">✓</span>
+            <span class="font-black">{{ r.isPractice ? 'Practice' : `Round ${r.id}` }}</span>
+            <span class="text-[10px] font-mono opacity-80">{{ r.timeOfDay }}</span>
+            <span
+              class="text-[10px] font-mono font-bold"
+              :class="currentRoundIndex === idx ? 'text-[#BBF7D0]' : roundScores[r.id] ? 'text-[#4ADE80]' : 'text-slate-400'"
+            >
+              {{ roundScores[r.id] ? (r.isPractice ? '✓ Done' : `+${roundScores[r.id]?.finalScore}pts`) : `${r.demandMW}MW` }}
+            </span>
           </button>
         </div>
       </div>

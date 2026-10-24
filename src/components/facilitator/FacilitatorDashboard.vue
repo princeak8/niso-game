@@ -61,31 +61,31 @@ function setOverrideScore(teamId: string, roundId: number) {
   <div class="space-y-6">
     
     <!-- Facilitator Master Control Deck -->
-    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-2xl p-5 shadow-xl">
-      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b-2 border-[#1E3A5F]">
+    <div class="bg-[#0F243A] border-2 border-[#1E3A5F] rounded-xl p-3.5 sm:p-4 shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-[#1E3A5F]">
         <div>
           <div class="text-xs font-black uppercase tracking-wider text-[#86EFAC]">
             Facilitator Master Deck
           </div>
-          <h2 class="text-xl md:text-2xl font-black text-white">
+          <h2 class="text-lg md:text-xl font-black text-white">
             Grid Inspector Command & Scoring Console
           </h2>
         </div>
 
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2">
           <button
             type="button"
             @click="showSolutionModal = true"
-            class="px-4 py-2.5 rounded-xl bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#389E5F]/30 flex items-center gap-2 transition active:scale-95"
+            class="px-3 py-1.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase tracking-wider shadow flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
           >
             <span>🔑</span>
-            <span>View Solution Key</span>
+            <span>Solution Key</span>
           </button>
 
           <button
             type="button"
             @click="handleRingBell"
-            class="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-black text-xs uppercase tracking-wider shadow-lg flex items-center gap-2 transition active:scale-95"
+            class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-black text-xs uppercase tracking-wider shadow flex items-center gap-1.5 transition active:scale-95 cursor-pointer"
           >
             <span>🔔</span>
             <span>Ring Bell: "Hands Off!"</span>
@@ -93,90 +93,101 @@ function setOverrideScore(teamId: string, roundId: number) {
         </div>
       </div>
 
-      <!-- Orchestrator Controls Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        
-        <!-- Round Selector -->
-        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
-          <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
-            1. Orchestrate Active Round
-          </div>
-          <select
-            :value="game.currentRoundIndex.value"
-            @change="e => game.initializeRound(Number((e.target as HTMLSelectElement).value))"
-            class="w-full bg-[#0F243A] border-2 border-[#1E3A5F] text-white rounded-lg p-2 text-xs font-bold font-mono focus:border-[#389E5F] focus:ring-2 focus:ring-[#389E5F]"
-          >
-            <option
+      <!-- 1. Horizontal Round Selector Bar -->
+      <div class="bg-[#0B1726] p-2.5 rounded-xl border border-[#1E3A5F] mt-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs font-black uppercase tracking-wider text-slate-200 shrink-0">
+            1. Orchestrate Round:
+          </span>
+          <div class="flex items-center gap-1.5 overflow-x-auto py-0.5 max-w-full">
+            <button
               v-for="(r, idx) in game.ROUNDS"
               :key="r.id"
-              :value="idx"
+              type="button"
+              @click="game.initializeRound(idx)"
+              class="py-1 px-2.5 rounded-lg border text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shadow-sm"
+              :class="game.currentRoundIndex.value === idx
+                ? 'bg-[#389E5F] text-white border-[#BBF7D0] font-black shadow-md shadow-[#389E5F]/30'
+                : 'bg-[#0F243A] text-slate-300 border-[#1E3A5F] hover:text-white hover:border-slate-500'"
             >
-              {{ r.name }} ({{ r.timeOfDay }}) - Demand: {{ r.demandMW }}MW
-            </option>
-          </select>
-          <div class="mt-2 text-xs text-[#86EFAC] font-bold">
-            Tokens Needed: <strong class="text-white">{{ game.currentRound.value.tokensNeeded }}</strong> ({{ game.currentRound.value.tokensNeeded * 10 }} MW)
+              <span class="font-black">{{ r.isPractice ? 'Practice' : `Round ${r.id}` }}</span>
+              <span class="text-[10px] font-mono opacity-80">{{ r.timeOfDay }}</span>
+              <span class="text-[10px] font-mono font-bold" :class="game.currentRoundIndex.value === idx ? 'text-[#BBF7D0]' : 'text-[#86EFAC]'">
+                {{ r.demandMW }}MW
+              </span>
+            </button>
           </div>
         </div>
 
+        <div class="text-xs text-[#86EFAC] font-bold shrink-0 bg-[#143D24] px-2.5 py-1 rounded-lg border border-[#389E5F]/50">
+          Tokens Needed: <strong class="text-white font-mono">{{ game.currentRound.value.tokensNeeded }}</strong> ({{ game.currentRound.value.tokensNeeded * 10 }} MW)
+        </div>
+      </div>
+
+      <!-- 2. Controls Grid: Timer & In-Game Contingencies -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+        
         <!-- 2-Minute Timer Controls -->
-        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
-          <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
-            2. Round Timer (2:00 Minutes)
-          </div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-3xl font-black font-mono text-[#4ADE80]">
-              {{ Math.floor(game.timerSeconds.value / 60) }}:{{ (game.timerSeconds.value % 60) < 10 ? '0' : '' }}{{ game.timerSeconds.value % 60 }}
-            </span>
-            <span class="text-xs font-black px-2.5 py-1 rounded uppercase tracking-wide" :class="game.isLocked.value ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-[#143D24] text-[#4ADE80] border border-[#389E5F]/50'">
+        <div class="bg-[#0B1726] p-3 rounded-xl border border-[#1E3A5F] flex flex-col justify-between">
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="text-xs font-black uppercase text-slate-200">
+              2. Round Timer (2:00 Minutes)
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wide" :class="game.isLocked.value ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-[#143D24] text-[#4ADE80] border border-[#389E5F]/50'">
               {{ game.isLocked.value ? 'Locked (Hands Off)' : game.timerRunning.value ? 'Running' : 'Paused' }}
             </span>
           </div>
-          <div class="flex gap-2">
-            <button
-              type="button"
-              @click="game.startTimer"
-              class="flex-1 py-1.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase shadow transition"
-            >
-              Start
-            </button>
-            <button
-              type="button"
-              @click="game.pauseTimer"
-              class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-white font-bold text-xs uppercase transition"
-            >
-              Pause
-            </button>
-            <button
-              type="button"
-              @click="game.resetTimer"
-              class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-slate-200 font-bold text-xs uppercase transition"
-            >
-              Reset
-            </button>
+
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-2xl sm:text-3xl font-black font-mono text-[#4ADE80] leading-none">
+              {{ Math.floor(game.timerSeconds.value / 60) }}:{{ (game.timerSeconds.value % 60) < 10 ? '0' : '' }}{{ game.timerSeconds.value % 60 }}
+            </span>
+            <div class="flex gap-1.5 flex-1 max-w-xs">
+              <button
+                type="button"
+                @click="game.startTimer"
+                class="flex-1 py-1.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs uppercase shadow transition cursor-pointer"
+              >
+                Start
+              </button>
+              <button
+                type="button"
+                @click="game.pauseTimer"
+                class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-white font-bold text-xs uppercase transition cursor-pointer"
+              >
+                Pause
+              </button>
+              <button
+                type="button"
+                @click="game.resetTimer"
+                class="flex-1 py-1.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] text-slate-200 font-bold text-xs uppercase transition cursor-pointer"
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Manual Event Injections -->
-        <div class="bg-[#0B1726] p-3.5 rounded-xl border border-[#1E3A5F]">
+        <div class="bg-[#0B1726] p-3 rounded-xl border border-[#1E3A5F] flex flex-col justify-between">
           <div class="text-xs font-black uppercase text-slate-200 mb-1.5">
             3. In-Game Contingency Injections
           </div>
-          <div class="flex flex-col gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <button
               type="button"
               @click="handleTriggerTrip"
-              class="py-2 px-3 rounded-lg bg-rose-950/80 hover:bg-rose-900 border-2 border-rose-500/60 text-white font-black text-xs text-left flex items-center justify-between transition"
+              class="py-1.5 px-2.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/60 text-white font-black text-xs flex items-center justify-between transition cursor-pointer"
             >
-              <span>🚨 Inject Egbin Gas Trip (R3)</span>
-              <span class="text-xs font-mono font-bold bg-rose-900 px-1.5 py-0.5 rounded">0 MW</span>
+              <span>🚨 Inject Egbin Trip (R3)</span>
+              <span class="text-[10px] font-mono font-bold bg-rose-900 px-1 py-0.2 rounded">0MW</span>
             </button>
             <button
               type="button"
               @click="game.advanceNextRound"
-              class="py-2 px-3 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] border border-[#1E3A5F] text-white font-bold text-xs text-left flex items-center justify-between transition"
+              class="py-1.5 px-2.5 rounded-lg bg-[#132E4C] hover:bg-[#1E3A5F] border border-[#1E3A5F] text-white font-bold text-xs flex items-center justify-between transition cursor-pointer"
             >
-              <span>Advance to Next Round</span>
+              <span>Advance Next Round</span>
               <span class="text-sm font-bold">→</span>
             </button>
           </div>
