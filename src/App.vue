@@ -43,8 +43,8 @@ onMounted(() => {
       @open-solution-key="showSolutionKey = true"
     />
 
-    <!-- Main Dynamic Content Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+    <!-- Main Dynamic Content Container (Full Width) -->
+    <main class="flex-1 w-full p-4 md:p-6 lg:px-8">
       
       <!-- Team Dispatcher Mode -->
       <TeamPlayView

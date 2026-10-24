@@ -92,6 +92,8 @@ html, body {
   .md\:text-2xl { font-size: 1.5rem; }
   .md\:text-3xl { font-size: 1.875rem; }
   .md\:p-6 { padding: 1.5rem; }
+  .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
   .md\:inline { display: inline; }
 }
 
@@ -110,6 +112,7 @@ html, body {
   .lg\:w-1\/2 { width: 50%; }
   .lg\:w-5\/12 { width: 41.666667%; }
   .lg\:w-7\/12 { width: 58.333333%; }
+  .lg\:px-8 { padding-left: 2rem; padding-right: 2rem; }
   .lg\:inline { display: inline; }
   .lg\:flex { display: flex; }
   .lg\:flex-row { flex-direction: row; }
@@ -185,6 +188,7 @@ html, body {
 .px-4 { padding-left: 1rem; padding-right: 1rem; }
 .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
 .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
 
 .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
 .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }

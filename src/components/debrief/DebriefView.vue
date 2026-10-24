@@ -158,8 +158,8 @@ function handleSaveQuestion() {
             </h5>
           </div>
 
-          <div class="pt-2.5 border-t border-[#1E3A5F] text-xs text-amber-200 leading-relaxed font-medium">
-            <strong class="text-amber-300 font-black">Real Life in Nigeria:</strong> {{ item.realWorldReality }}
+          <div class="pt-2.5 border-t border-[#1E3A5F] text-xs text-slate-300 leading-relaxed font-medium">
+            <strong class="text-slate-100 font-black">Real Life in Nigeria:</strong> {{ item.realWorldReality }}
           </div>
         </div>
       </div>
