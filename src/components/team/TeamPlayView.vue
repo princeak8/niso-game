@@ -77,10 +77,10 @@ function handleDragStart(e: DragEvent) {
 </script>
 
 <template>
-  <div class="space-y-1">
+  <div class="space-y-1.5">
 
     <!-- Top Row: Compact Team Identity & Practice Walkthrough Hint -->
-    <div class="w-full flex flex-wrap items-center justify-between gap-1 px-2 py-0.5 bg-[#0F243A] border border-[#1E3A5F] rounded-lg shadow-sm text-xs">
+    <div class="w-full flex flex-wrap items-center justify-between gap-1.5 px-2.5 py-1 bg-[#0F243A] border border-[#1E3A5F] rounded-lg shadow-sm text-xs">
       
       <!-- Team Identity & Roles -->
       <div class="flex items-center gap-2 flex-wrap">
@@ -166,87 +166,91 @@ function handleDragStart(e: DragEvent) {
     />
 
     <!-- National Grid Dispatch Ring Container (Circular Perimeter & Center Hub) -->
-    <div class="relative w-full rounded-xl p-1.5 sm:p-2 bg-[#0F243A] border border-[#1E3A5F] shadow-lg overflow-hidden">
+    <div class="relative w-full rounded-xl p-2 sm:p-2.5 bg-[#0F243A] border border-[#1E3A5F] shadow-lg overflow-hidden">
       
       <!-- Perimeter Title Bar -->
-      <div class="relative z-10 flex flex-wrap items-center justify-between gap-1 mb-1 pb-0.5 border-b border-[#1E3A5F]">
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-1.5 mb-1.5 pb-1 border-b border-[#1E3A5F]">
         <div class="flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-[#389E5F] animate-ping"></span>
-          <h3 class="text-xs font-black uppercase tracking-wider text-white">
+          <h3 class="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
             National Grid Dispatch Ring
           </h3>
-          <span class="text-[9px] text-slate-300 hidden md:inline">
+          <span class="text-[9.5px] text-slate-300 hidden md:inline">
             · 4 Regional Stations feeding NCC Osogbo Central Hub
           </span>
         </div>
 
         <div class="flex items-center gap-1.5">
-          <span class="text-[9px] text-[#4ADE80] font-mono font-bold bg-[#143D24] px-1.5 py-0.2 rounded border border-[#389E5F]/50">
+          <span class="text-[9.5px] text-[#4ADE80] font-mono font-bold bg-[#143D24] px-1.5 py-0.5 rounded border border-[#389E5F]/50">
             Total Gen: {{ game.totalGenerationMW.value }} MW
           </span>
-          <span class="text-[9px] text-amber-300 font-mono font-bold bg-amber-950/60 px-1.5 py-0.2 rounded border border-amber-500/40 hidden sm:inline">
+          <span class="text-[9.5px] text-amber-300 font-mono font-bold bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-500/40 hidden sm:inline">
             Gas Ramp: ±30 MW max
           </span>
         </div>
       </div>
 
       <!-- 3-COLUMN PERIMETER DISPATCH RING: West Stations | NCC Central Hub | East Stations -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-1.5 md:gap-2 items-stretch relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 items-stretch relative z-10">
 
         <!-- ========================================================
-             WEST REGIONAL PERIMETER (Left Column: lg:col-span-4)
+             WEST REGIONAL PERIMETER (Left Column: lg:col-span-3)
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-1">
+        <div class="lg:col-span-3 flex flex-col justify-center gap-1.5 sm:gap-2 py-0.5">
           <!-- Station 1: Kainji Hydro -->
-          <StationCard
-            id="kainji"
-            name="Hydro Plant"
-            real-name="Kainji Hydroelectric"
-            location="Niger River · Niger"
-            plant-type="Hydro"
-            :max-capacity="8"
-            :current-tokens="game.kainjiTokens.value"
-            :max-allowed-in-round="game.maxKainji.value"
-            :is-controlled-by-team="true"
-            :is-locked="game.isLocked.value"
-            :store-tokens-available="game.storeTokens.value"
-            :round-id="game.currentRound.value.id"
-            @adjust="delta => game.adjustKainji(delta)"
-            @drop-token="() => handleDropToken('kainji')"
-          />
+          <div class="w-full max-w-[285px] sm:max-w-[295px] mx-auto">
+            <StationCard
+              id="kainji"
+              name="Hydro Plant"
+              real-name="Kainji Hydroelectric"
+              location="Niger River · Niger"
+              plant-type="Hydro"
+              :max-capacity="8"
+              :current-tokens="game.kainjiTokens.value"
+              :max-allowed-in-round="game.maxKainji.value"
+              :is-controlled-by-team="true"
+              :is-locked="game.isLocked.value"
+              :store-tokens-available="game.storeTokens.value"
+              :round-id="game.currentRound.value.id"
+              @adjust="delta => game.adjustKainji(delta)"
+              @drop-token="() => handleDropToken('kainji')"
+            />
+          </div>
 
           <!-- Station 2: Egbin Gas Station A -->
-          <StationCard
-            id="egbin"
-            name="Gas Station A"
-            real-name="Egbin Thermal Power"
-            location="Ikorodu · Lagos"
-            plant-type="Gas"
-            :max-capacity="12"
-            :current-tokens="game.egbinTokens.value"
-            :max-allowed-in-round="game.maxEgbin.value"
-            :previous-round-tokens="game.previousEgbinTokens.value"
-            :ramp-limit="3"
-            :is-ramp-violated="game.egbinDelta.value > 3 && !game.currentRound.value.egbinTripped"
-            :is-controlled-by-team="true"
-            :is-locked="game.isLocked.value"
-            :store-tokens-available="game.storeTokens.value"
-            :round-id="game.currentRound.value.id"
-            @adjust="delta => game.adjustEgbin(delta)"
-            @drop-token="() => handleDropToken('egbin')"
-          />
+          <div class="w-full max-w-[285px] sm:max-w-[295px] mx-auto">
+            <StationCard
+              id="egbin"
+              name="Gas Station A"
+              real-name="Egbin Thermal Power"
+              location="Ikorodu · Lagos"
+              plant-type="Gas"
+              :max-capacity="12"
+              :current-tokens="game.egbinTokens.value"
+              :max-allowed-in-round="game.maxEgbin.value"
+              :previous-round-tokens="game.previousEgbinTokens.value"
+              :ramp-limit="3"
+              :is-ramp-violated="game.egbinDelta.value > 3 && !game.currentRound.value.egbinTripped"
+              :is-controlled-by-team="true"
+              :is-locked="game.isLocked.value"
+              :store-tokens-available="game.storeTokens.value"
+              :round-id="game.currentRound.value.id"
+              @adjust="delta => game.adjustEgbin(delta)"
+              @drop-token="() => handleDropToken('egbin')"
+            />
+          </div>
         </div>
 
         <!-- ========================================================
-             CENTRAL DISPATCH HUB (Center Column: lg:col-span-4)
+             CENTRAL DISPATCH HUB (Center Column: lg:col-span-6)
              Frequency Dashboard + Token Depot + Load Shedding
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-1 justify-between">
+        <div class="lg:col-span-6 flex flex-col justify-between py-0.5 gap-1.5">
 
           <!-- Central Hub Header Badge -->
-          <div class="w-full text-center py-0.5 px-2 rounded bg-[#143D24] border border-[#389E5F] shadow flex items-center justify-center gap-1.5">
+          <div class="w-full text-center py-1 px-2 rounded bg-[#143D24] border border-[#389E5F] shadow flex items-center justify-center gap-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-ping"></span>
-            <span class="text-[10px] font-black uppercase text-[#86EFAC]">Central Grid Controller · NCC Osogbo</span>
+            <span class="text-[10.5px] font-black uppercase text-[#86EFAC]">Central Grid Controller · NCC Osogbo</span>
           </div>
 
           <!-- Central Frequency Dashboard -->
@@ -262,7 +266,7 @@ function handleDragStart(e: DragEvent) {
           />
 
           <!-- Central Token Depot & Load Shed Tray (Side-by-side on wide) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             <TokenDepot
               :store-tokens="game.storeTokens.value"
               :total-tokens="40"
@@ -280,56 +284,60 @@ function handleDragStart(e: DragEvent) {
         </div>
 
         <!-- ========================================================
-             EAST REGIONAL PERIMETER (Right Column: lg:col-span-4)
+             EAST REGIONAL PERIMETER (Right Column: lg:col-span-3)
              ======================================================== -->
-        <div class="lg:col-span-4 flex flex-col gap-1">
+        <div class="lg:col-span-3 flex flex-col justify-center gap-1.5 sm:gap-2 py-0.5">
 
           <!-- Station 3: Kano Solar -->
-          <StationCard
-            id="kano"
-            name="Solar Power Plant"
-            real-name="Kano Solar Farm"
-            location="Kumbotso · Kano"
-            plant-type="Solar"
-            :max-capacity="6"
-            :current-tokens="game.kanoTokens.value"
-            :max-allowed-in-round="game.maxKano.value"
-            :is-controlled-by-team="false"
-            :is-locked="game.isLocked.value"
-            :store-tokens-available="game.storeTokens.value"
-            :round-id="game.currentRound.value.id"
-            @adjust="() => {}"
-          />
+          <div class="w-full max-w-[285px] sm:max-w-[295px] mx-auto">
+            <StationCard
+              id="kano"
+              name="Solar Power Plant"
+              real-name="Kano Solar Farm"
+              location="Kumbotso · Kano"
+              plant-type="Solar"
+              :max-capacity="6"
+              :current-tokens="game.kanoTokens.value"
+              :max-allowed-in-round="game.maxKano.value"
+              :is-controlled-by-team="false"
+              :is-locked="game.isLocked.value"
+              :store-tokens-available="game.storeTokens.value"
+              :round-id="game.currentRound.value.id"
+              @adjust="() => {}"
+            />
+          </div>
 
           <!-- Station 4: Geregu Gas Turbine -->
-          <StationCard
-            id="geregu"
-            name="Gas Station B"
-            real-name="Geregu Power Plant"
-            location="Ajaokuta · Kogi"
-            plant-type="Gas"
-            :max-capacity="12"
-            :current-tokens="game.gereguTokens.value"
-            :max-allowed-in-round="game.maxGeregu.value"
-            :previous-round-tokens="game.previousGereguTokens.value"
-            :ramp-limit="3"
-            :is-ramp-violated="game.gereguDelta.value > 3"
-            :is-controlled-by-team="true"
-            :is-locked="game.isLocked.value"
-            :store-tokens-available="game.storeTokens.value"
-            :round-id="game.currentRound.value.id"
-            @adjust="delta => game.adjustGeregu(delta)"
-            @drop-token="() => handleDropToken('geregu')"
-          />
+          <div class="w-full max-w-[285px] sm:max-w-[295px] mx-auto">
+            <StationCard
+              id="geregu"
+              name="Gas Station B"
+              real-name="Geregu Power Plant"
+              location="Ajaokuta · Kogi"
+              plant-type="Gas"
+              :max-capacity="12"
+              :current-tokens="game.gereguTokens.value"
+              :max-allowed-in-round="game.maxGeregu.value"
+              :previous-round-tokens="game.previousGereguTokens.value"
+              :ramp-limit="3"
+              :is-ramp-violated="game.gereguDelta.value > 3"
+              :is-controlled-by-team="true"
+              :is-locked="game.isLocked.value"
+              :store-tokens-available="game.storeTokens.value"
+              :round-id="game.currentRound.value.id"
+              @adjust="delta => game.adjustGeregu(delta)"
+              @drop-token="() => handleDropToken('geregu')"
+            />
+          </div>
 
         </div>
 
       </div>
 
       <!-- Legend Footer Bar (Compact inline) -->
-      <div class="mt-1 pt-0.5 border-t border-[#1E3A5F] flex flex-wrap items-center justify-center gap-3 text-[9px] text-slate-400 font-bold">
-        <span v-for="k in legend" :key="k.kind" class="flex items-center gap-1">
-          <PlantIcon :kind="k.kind" :size="14" :active="false" />
+      <div class="mt-1.5 pt-1 border-t border-[#1E3A5F] flex flex-wrap items-center justify-center gap-3.5 text-[9.5px] text-slate-400 font-bold">
+        <span v-for="k in legend" :key="k.kind" class="flex items-center gap-1.5">
+          <PlantIcon :kind="k.kind" :size="15" :active="false" />
           <span>{{ k.label }}</span>
         </span>
       </div>

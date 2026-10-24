@@ -10,23 +10,23 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="bg-[#132E4C] border border-[#389E5F]/50 rounded-lg p-1 sm:p-1.5 shadow-md flex flex-col justify-between text-xs">
+  <div class="bg-[#132E4C] border border-[#389E5F]/50 rounded-lg p-1.5 shadow-md flex flex-col justify-between text-xs">
     
     <div>
-      <div class="flex items-center justify-between mb-0.5">
+      <div class="flex items-center justify-between mb-1">
         <div class="flex items-center gap-1">
           <span class="text-sm">🔌</span>
-          <h3 class="font-black text-[11px] text-white uppercase tracking-tight">
+          <h3 class="font-black text-xs text-white uppercase tracking-tight">
             Load Shedding
           </h3>
         </div>
-        <span class="text-[8px] font-bold px-1.5 py-0.2 rounded bg-rose-500/25 text-[#FDA4AF] border border-rose-500/50">
+        <span class="text-[8.5px] font-bold px-1.5 py-0.2 rounded bg-rose-500/25 text-[#FDA4AF] border border-rose-500/50">
           Last Resort (-1 pt/tok)
         </span>
       </div>
 
       <!-- Token Selector Buttons -->
-      <div class="grid grid-cols-4 gap-1 mb-1">
+      <div class="grid grid-cols-4 gap-1 mb-1.5">
         <button
           v-for="tokens in [0, 1, 2, 3]"
           :key="tokens"
@@ -34,7 +34,7 @@ const emit = defineEmits<{
           @click="emit('update:loadShedTokens', tokens)"
           :disabled="isLocked"
           :class="[
-            'py-0.5 rounded font-black text-[10px] border transition flex flex-col items-center justify-center cursor-pointer',
+            'py-1 rounded font-black text-[10px] border transition flex flex-col items-center justify-center cursor-pointer',
             loadShedTokens === tokens
               ? tokens === 0
                 ? 'bg-[#389E5F] text-white border-[#BBF7D0] shadow-sm'
@@ -43,14 +43,14 @@ const emit = defineEmits<{
           ]"
         >
           <span>{{ tokens === 0 ? '0 Cut' : `${tokens} Tok` }}</span>
-          <span class="text-[8px] font-mono opacity-80">{{ tokens * 10 }}MW</span>
+          <span class="text-[8.5px] font-mono opacity-80">{{ tokens * 10 }}MW</span>
         </button>
       </div>
     </div>
 
     <!-- Live Status / Penalty Alert -->
     <div
-      class="px-1.5 py-0.5 rounded border text-[9px] flex items-center justify-between shadow-inner"
+      class="px-2 py-1 rounded border text-[9.5px] flex items-center justify-between shadow-inner"
       :class="loadShedTokens > 0 ? 'bg-rose-950/60 border-rose-500 text-rose-100' : 'bg-[#091B2E] border-slate-700 text-slate-300'"
     >
       <span class="font-bold truncate">

@@ -17,7 +17,7 @@ const isSolarNight = computed(() => {
 </script>
 
 <template>
-  <div class="relative w-full h-5 sm:h-6 rounded overflow-hidden border border-black/30 shadow-inner mb-0.5">
+  <div class="relative w-full h-7 sm:h-8 rounded overflow-hidden border border-black/30 shadow-inner mb-1">
     
     <!-- 1. HYDRO POWER PLANT (KAINJI HYDROELECTRIC DAM) -->
     <div v-if="plantType === 'Hydro'" class="relative w-full h-full bg-gradient-to-b from-[#0284C7] via-[#0369A1] to-[#0C4A6E]">

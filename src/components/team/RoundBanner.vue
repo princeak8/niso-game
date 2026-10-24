@@ -39,17 +39,17 @@ const timerPercent = computed(() => {
 </script>
 
 <template>
-  <div class="bg-[#132E4C] border border-[#389E5F]/50 rounded-lg p-1 sm:p-1.5 shadow-md">
+  <div class="bg-[#132E4C] border border-[#389E5F]/50 rounded-xl p-1.5 sm:p-2 shadow-md">
     
     <!-- Top Row: Round Info & 2-Minute Timer -->
     <div class="flex flex-wrap items-center justify-between gap-1.5 pb-1 border-b border-slate-700/80">
       
       <!-- Round Name, Time of Day, and Badge -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-[9px] font-black px-1.5 py-0.2 rounded bg-[#389E5F]/30 text-[#86EFAC] border border-[#389E5F]/60 uppercase tracking-wide">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-[9.5px] font-black px-1.5 py-0.2 rounded bg-[#389E5F]/30 text-[#86EFAC] border border-[#389E5F]/60 uppercase tracking-wide">
           {{ round.isPractice ? 'Practice' : `Round ${round.id}/6` }}
         </span>
-        <span class="text-[9px] font-mono font-black text-[#FCD34D] flex items-center gap-1 bg-amber-950/50 px-1.5 py-0.2 rounded border border-amber-500/40">
+        <span class="text-[9.5px] font-mono font-black text-[#FCD34D] flex items-center gap-1 bg-amber-950/50 px-1.5 py-0.2 rounded border border-amber-500/40">
           <span>⏰</span>
           <span>{{ round.timeOfDay }}</span>
         </span>
@@ -71,18 +71,18 @@ const timerPercent = computed(() => {
           >
             {{ formattedTime }}
           </span>
-          <span class="text-[8px] font-bold uppercase text-slate-300 block -mt-0.5">
+          <span class="text-[8.5px] font-bold uppercase text-slate-300 block -mt-0.5">
             {{ isLocked ? 'Locked' : 'Timer' }}
           </span>
         </div>
 
         <!-- Timer Controls / Lock Actions -->
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1.5">
           <button
             v-if="!timerRunning && !isLocked && !isSubmitted"
             type="button"
             @click="emit('startTimer')"
-            class="py-0.5 px-2 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs shadow border border-[#52BF7B] transition active:scale-95 cursor-pointer"
+            class="py-1 px-2.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] text-white font-black text-xs shadow border border-[#52BF7B] transition active:scale-95 cursor-pointer"
             title="Start Timer"
           >
             ▶ Play
@@ -92,7 +92,7 @@ const timerPercent = computed(() => {
             v-else-if="timerRunning && !isLocked"
             type="button"
             @click="emit('pauseTimer')"
-            class="py-0.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-xs border border-slate-600 transition cursor-pointer"
+            class="py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-black text-xs border border-slate-600 transition cursor-pointer"
             title="Pause Timer"
           >
             ⏸ Pause
@@ -103,7 +103,7 @@ const timerPercent = computed(() => {
             v-if="!isSubmitted"
             type="button"
             @click="emit('submitRound')"
-            class="px-2.5 py-0.5 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] active:bg-[#1E5C35] text-white font-black text-xs shadow border border-[#BBF7D0] transition active:scale-95 flex items-center gap-1 cursor-pointer"
+            class="px-3 py-1 rounded-lg bg-[#389E5F] hover:bg-[#2B7A49] active:bg-[#1E5C35] text-white font-black text-xs shadow border border-[#BBF7D0] transition active:scale-95 flex items-center gap-1 cursor-pointer"
           >
             <span>✓</span>
             <span>Lock & Submit</span>
@@ -113,7 +113,7 @@ const timerPercent = computed(() => {
             v-else
             type="button"
             @click="emit('unlockRound')"
-            class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-[#FCD34D] font-black text-xs border border-amber-500/40 cursor-pointer"
+            class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[#FCD34D] font-black text-xs border border-amber-500/40 cursor-pointer"
           >
             ✎ Edit
           </button>
@@ -123,7 +123,7 @@ const timerPercent = computed(() => {
     </div>
 
     <!-- Timer Progress Bar -->
-    <div class="w-full bg-slate-950 h-0.5 rounded-full my-0.5 overflow-hidden">
+    <div class="w-full bg-slate-950 h-1 rounded-full my-1 overflow-hidden">
       <div
         class="h-full transition-all duration-1000 rounded-full"
         :class="timerSeconds <= 10 ? 'bg-rose-500' : timerSeconds <= 30 ? 'bg-amber-500' : 'bg-teal-500'"
@@ -134,31 +134,31 @@ const timerPercent = computed(() => {
     <!-- "Hands Off!" Dramatic Lockout Banner -->
     <div
       v-if="isLocked && timerSeconds === 0"
-      class="p-1 rounded bg-rose-600 text-white font-black text-center text-[10px] tracking-wide uppercase shadow border border-rose-300 flex items-center justify-center gap-1.5 my-0.5"
+      class="p-1 rounded bg-rose-600 text-white font-black text-center text-[10px] tracking-wide uppercase shadow border border-rose-300 flex items-center justify-center gap-1.5 my-1"
     >
       <span>🔔 HANDS OFF! 2-Minute Dispatch Time Expired. Scored automatically.</span>
     </div>
 
     <!-- Live Grid Demand vs Generation Telemetry Bar -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-1 mt-0.5">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5 mt-1">
       
       <!-- Total System Demand -->
-      <div class="bg-[#091B2E] px-1.5 py-0.5 rounded border border-slate-700/80 shadow-sm flex items-center justify-between">
+      <div class="bg-[#091B2E] px-2 py-1 rounded-lg border border-slate-700/80 shadow-sm flex items-center justify-between">
         <div>
-          <div class="text-[8px] font-bold uppercase text-slate-300">System Demand</div>
+          <div class="text-[8.5px] font-bold uppercase text-slate-300">System Demand</div>
           <div class="text-xs sm:text-sm font-black font-mono text-white leading-tight">
             {{ round.demandMW }} <span class="text-[9px] font-sans font-bold text-slate-300">MW</span>
           </div>
         </div>
-        <div class="text-[9px] text-slate-300 font-mono font-bold">
+        <div class="text-[9.5px] text-slate-300 font-mono font-bold">
           {{ round.demandTokens }} tok
         </div>
       </div>
 
       <!-- Kano Solar Contribution -->
-      <div class="bg-[#091B2E] px-1.5 py-0.5 rounded border border-yellow-500/40 shadow-sm flex items-center justify-between">
+      <div class="bg-[#091B2E] px-2 py-1 rounded-lg border border-yellow-500/40 shadow-sm flex items-center justify-between">
         <div>
-          <div class="text-[8px] font-bold uppercase text-yellow-300 flex items-center gap-1">
+          <div class="text-[8.5px] font-bold uppercase text-yellow-300 flex items-center gap-1">
             <span>☀️</span>
             <span>Kano Solar</span>
           </div>
@@ -166,27 +166,27 @@ const timerPercent = computed(() => {
             {{ round.solarMW }} <span class="text-[9px] font-sans font-bold text-slate-300">MW</span>
           </div>
         </div>
-        <div class="text-[9px] text-yellow-200 font-mono font-bold">
+        <div class="text-[9.5px] text-yellow-200 font-mono font-bold">
           {{ round.solarTokens }} tok
         </div>
       </div>
 
       <!-- Tokens Needed (Thermal + Hydro) -->
-      <div class="bg-[#091B2E] px-1.5 py-0.5 rounded border border-[#389E5F]/50 shadow-sm flex items-center justify-between">
+      <div class="bg-[#091B2E] px-2 py-1 rounded-lg border border-[#389E5F]/50 shadow-sm flex items-center justify-between">
         <div>
-          <div class="text-[8px] font-bold uppercase text-[#86EFAC]">Net Needed</div>
+          <div class="text-[8.5px] font-bold uppercase text-[#86EFAC]">Net Needed</div>
           <div class="text-xs sm:text-sm font-black font-mono text-[#4ADE80] leading-tight">
             {{ round.tokensNeeded * 10 }} <span class="text-[9px] font-sans font-bold text-slate-300">MW</span>
           </div>
         </div>
-        <div class="text-[9px] text-[#BBF7D0] font-mono font-bold">
+        <div class="text-[9.5px] text-[#BBF7D0] font-mono font-bold">
           {{ round.tokensNeeded }} tok
         </div>
       </div>
 
       <!-- Live Dispatch Balance Gap -->
       <div
-        class="px-1.5 py-0.5 rounded border flex items-center justify-between shadow-sm"
+        class="px-2 py-1 rounded-lg border flex items-center justify-between shadow-sm"
         :class="[
           gapMW === 0
             ? 'bg-[#143D24] border-[#389E5F] text-white'
@@ -196,14 +196,14 @@ const timerPercent = computed(() => {
         ]"
       >
         <div>
-          <div class="text-[8px] font-bold uppercase tracking-wider">
+          <div class="text-[8.5px] font-bold uppercase tracking-wider">
             {{ gapMW === 0 ? 'Grid Balance' : 'Mismatch Gap' }}
           </div>
           <div class="text-xs sm:text-sm font-black font-mono leading-tight">
             {{ gapMW === 0 ? '0 MW Gap' : `${gapMW > 0 ? (totalGenMW > effectiveDemandMW ? '+' : '-') : ''}${gapMW} MW` }}
           </div>
         </div>
-        <div class="text-[9px] font-black tracking-tight" :class="gapMW === 0 ? 'text-[#86EFAC]' : 'text-white'">
+        <div class="text-[9.5px] font-black tracking-tight" :class="gapMW === 0 ? 'text-[#86EFAC]' : 'text-white'">
           {{ gapTokens === 0 ? 'Exact (+3)' : `${gapTokens} tok off` }}
         </div>
       </div>
